@@ -1,0 +1,7 @@
+#start{
+    position: absolute;
+    z-index: 100;
+    bottom: 50%;
+    transform: rotate(180deg);
+    left:-200px;
+}

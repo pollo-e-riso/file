@@ -6,6 +6,7 @@ var arrowUp = document.getElementById("arrow-up");
 var arrowLeft = document.getElementById("arrow-left");
 var arrowRight = document.getElementById("arrow-right");
 
+
 arrowDown.onclick = pacmanMovement;
 arrowUp.onclick = pacmanMovement;
 arrowLeft.onclick = pacmanMovement;
@@ -25,25 +26,25 @@ function pacmanMovement(event) {
     case "arrow-down":
       yPos += 10;
       pacman.style.top = yPos + "px";
-      pacman.style.transform = "rotate(90deg)";
+      pacman.style.transform = "rotate(-90deg)";
       break;
     case "ArrowUp":
     case "arrow-up":
       yPos -= 10;
       pacman.style.top = yPos + "px";
-      pacman.style.transform = "rotate(-90deg)";
+      pacman.style.transform = "rotate(90deg)";
       break;
     case "ArrowLeft":
     case "arrow-left":
       xPos -= 10;
       pacman.style.left = xPos + "px";
-      pacman.style.transform = "rotate(180deg)";
+      pacman.style.transform = "rotate(0deg)";
       break;
     case "ArrowRight":
     case "arrow-right":
       xPos += 10;
       pacman.style.left = xPos + "px";
-      pacman.style.transform = "rotate(0deg)";
+      pacman.style.transform = "rotate(180deg)";
       break;
   }
   consoleLog(event);
