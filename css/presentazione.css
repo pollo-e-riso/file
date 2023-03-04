@@ -1,7 +1,30 @@
-#start{
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+  }
+#pacman {
     position: absolute;
     z-index: 100;
-    bottom: 50%;
+    right: 100%;
+    bottom: -10%;
     transform: rotate(180deg);
-    left:-200px;
+    height: 127%;
+    width: 87%;
+}
+.rettangolo {
+    z-index: 90;
+    position: absolute;
+    left: -64%;
+    width: 4%;
+    height: 100%;
+    background-color: black;
+    box-shadow: 2px 2px 5px #888888;
+}
+#start {
+  position: absolute;
+  left: 44%;
+  top: 72%;
 }
