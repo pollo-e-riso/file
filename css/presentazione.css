@@ -3,7 +3,7 @@ body, html {
     width: 100%;
     margin: 0;
     padding: 0;
-    background-color: #000;
+    background-color: white;
   }
 #pacman {
     position: absolute;
@@ -25,11 +25,12 @@ body, html {
 }
 #start {
   position: absolute;
-  top: 90%;
+  top: 80%;
   background-color: transparent;
-  border: 3px solid rgb(46, 46, 215);
+  border: 3px solid rgb(190, 190, 22);
+  border-radius: 7%;
   color: white;
-  font-size: 25px;
+  font-size: 45px;
   padding: 10px 30px;
   transition: background-color 0.25s;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,12 +38,12 @@ body, html {
 }
 
 #start:hover {
-  background-color: rgb(46, 46, 215);
+  background-color: rgb(190, 190, 22);
 }
 
 #start:active {
-  background-color: rgb(31, 31, 135);
-  border: 3px solid rgb(31, 31, 135);
+  background-color: rgb(190, 190, 22);
+  border: 3px solid rgb(190, 190, 22);
 }
 
 #buttonContainer{
@@ -50,18 +51,14 @@ body, html {
   justify-content: center;
 }
 
-#textContainer{
-  display: flex;
-  border: 2px solid red;
-  color: white;
-  border: 3px solid rgb(46, 46, 215);
-  width: fit-content;
+
+#title {
+  width: 500px;
   margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
-  padding: 10px 20px;
+  display: flex;
 }
-
 #text {
   font-size: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
