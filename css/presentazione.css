@@ -25,6 +25,44 @@ body, html {
 }
 #start {
   position: absolute;
-  left: 44%;
-  top: 72%;
+  top: 90%;
+  background-color: transparent;
+  border: 3px solid rgb(46, 46, 215);
+  color: white;
+  font-size: 25px;
+  padding: 10px 30px;
+  transition: background-color 0.25s;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+}
+
+#start:hover {
+  background-color: rgb(46, 46, 215);
+}
+
+#start:active {
+  background-color: rgb(31, 31, 135);
+  border: 3px solid rgb(31, 31, 135);
+}
+
+#buttonContainer{
+  display: flex;
+  justify-content: center;
+}
+
+#textContainer{
+  display: flex;
+  border: 2px solid red;
+  color: white;
+  border: 3px solid rgb(46, 46, 215);
+  width: fit-content;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 20px;
+}
+
+#text {
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
