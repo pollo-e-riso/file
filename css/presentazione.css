@@ -10,7 +10,6 @@ body, html {
 .pacman {
     position: absolute;
     z-index: 100;
-
     transform: rotate(180deg);
     height: 26%;
     right:108%;
@@ -93,7 +92,7 @@ body, html {
   margin: 0 auto;
   z-index: 1;
   transition: background-color 0.25s;
-  width: 1300px;
+  width: 85%;
   margin: 0 auto;
 }
 
@@ -113,11 +112,10 @@ body, html {
 }
 
 #title {
-  width: 45%;
+  width: 40%;
   margin-top: 30px;
   position: absolute;
 }
 #text {
-  font-size: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
