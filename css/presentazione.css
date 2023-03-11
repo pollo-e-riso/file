@@ -41,7 +41,6 @@ body, html {
     z-index: 90;
     position: absolute;
     width: 4%;
-    box-shadow: 1px 1px 2px rgb(87, 87, 87);
     background-color: black;
     height: 20%;
     left:-20%;
@@ -51,7 +50,6 @@ body, html {
   position: absolute;
   width: 4%;
   background-color: black;
-  box-shadow: 1px 1px 2px rgb(87, 87, 87);
   height: 20%;
   right:-20%;
 }
