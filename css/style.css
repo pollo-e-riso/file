@@ -1,5 +1,4 @@
 body {
-  
   z-index: 0;
 }
 #pacman {
@@ -9,9 +8,6 @@ body {
   z-index: 100;
   bottom: 50%;
   transform: rotate(180deg);
-  
-
-  
 }
 
 #pacman-hitbox {
