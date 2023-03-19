@@ -1,0 +1,12 @@
+body {
+  background-color: black;
+  margin: 0;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  background-color: white;
+  left: 50%;
+  transform: translateX(-50%);
+}
