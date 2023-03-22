@@ -95,8 +95,8 @@ body, html {
   font-size: 350%;
   padding: 1% 2%;
   transition: background-color 0.25s;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 700;
+  font-family: 'CrackMan', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
   z-index: 10;
 
   cursor: pointer;
@@ -124,15 +124,15 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 29vh;
+  height: 31vh;
 }
 
 #title {
   margin-top: 30px;
-  max-width: 50vw;
-  max-height: 50vh;
+  max-width: 65vw;
+  max-height: 55vh;
   position: absolute;
-  width: 50%;
+  width: 100%;
 }
 
 #text {
