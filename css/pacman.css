@@ -6,7 +6,9 @@ body {
 
 canvas {
   position: absolute;
-  background-color: white;
+  background-color: black;
   left: 50%;
   transform: translateX(-50%);
+  text-align: center;
+  margin-top: 0.7%;
 }
