@@ -145,7 +145,7 @@ body, html {
   border-width: 0 7px 7px 0;
   display: inline-block;
   padding: 27px;
-  border-radius: 5px;
+  border-radius: 6px;
   position: fixed;
   z-index: 10;
   bottom: 1px;
@@ -166,4 +166,7 @@ body, html {
   bottom: 10px;
   left: 50%;
   z-index: 10;
+}
+audio {
+  display: none;
 }
