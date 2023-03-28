@@ -1,2 +1,0 @@
-pacman animations
-hollow map walls
