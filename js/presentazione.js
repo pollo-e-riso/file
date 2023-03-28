@@ -1,5 +1,4 @@
 var audio = document.getElementById("myAudio");
-var sfondoAudio = document.
 $(document).ready(function() {
     $("#start").click(function() {
       audio.play();
