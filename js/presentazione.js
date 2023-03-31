@@ -15,8 +15,8 @@ $(document).ready(function() {
         window.location.href = 'pacman.html';
       }, 4200);
     });
-    $(".up").on("click", function() {
-      $(this).toggleClass("up down");
+    $("#freccia").on("click", function() {
+      $(this).find("i").toggleClass("up down");
     });
   });
 

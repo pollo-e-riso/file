@@ -143,13 +143,14 @@ body, html {
 .arrow {
   border: solid white;
   border-width: 0 7px 7px 0;
-  display: inline-block;
   padding: 27px;
+  display: inline-block;
   border-radius: 6px;
   position: fixed;
-  z-index: 10;
-  bottom: 1px;
+  z-index: 50;
+  bottom: 2%;
   left: 48%;
+  transition: transform ease-in-out 0.5s;
 }
 .up {
   transform: rotate(-135deg);
