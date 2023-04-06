@@ -1,4 +1,5 @@
 $(document).ready(() => {
+
     const canvas = document.querySelector("canvas");
     const canvasContext = canvas.getContext("2d");
 
@@ -75,59 +76,67 @@ $(document).ready(() => {
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
-
+    
     createBoundaries();
-    createPacman();
+    createPacman()
     pacmanMovement();
+    animationLoop();
+
+    function animationLoop(){
+        requestAnimationFrame(animationLoop);
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        pacman.move();
+        drawBoundaries();
+    }
 
     function createPacman(){
         let pacmanStartPosition = boundarySize + boundarySize / 2;
 
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
-
-        pacman.draw();
     }
 
     function pacmanMovement(){
         $(document).keydown((event) => {
             let keyPressed = event.key;
-            const pacmanSpeed = 5;
+            const pacmanSpeed = 3;
             
             switch(keyPressed){
                 case "w":
                 case "W":
                 case "ArrowUp":
+                    pacman.speedX = 0;
                     pacman.speedY = -pacmanSpeed;
                     break;
                 
                 case "s":
                 case "S":
                 case "ArrowDown":
+                    pacman.speedX = 0;
                     pacman.speedY = pacmanSpeed;
                     break;
                     
                 case "d":
                 case "D":
                 case "ArrowRight":
-                    pacman.speedX = -pacmanSpeed;
+                    pacman.speedY = 0;
+                    pacman.speedX = pacmanSpeed;
                     break;
 
                 case "a":
                 case "A":
                 case "ArrowLeft":
-                    pacman.speedX = pacmanSpeed;
+                    pacman.speedY = 0;
+                    pacman.speedX = -pacmanSpeed;
                     break;
             }
 
-            console.log("X speed: " + pacman.speedX);
-            console.log("Y speed: " + pacman.speedY);
-            
+            console.log("X and Y speed: " + pacman.speedX + " " + pacman.speedY); 
         });
     }
 
     function createBoundaries(){
 
-        const boundaries = [];
+        boundaries = [];
 
         map.forEach((row, rowIndex) => {
             row.forEach((boundary, boundaryIndex) => {
@@ -136,9 +145,13 @@ $(document).ready(() => {
                 }
             });
         });
-    
+        
+        drawBoundaries();
+    }
+
+    function drawBoundaries(){
         boundaries.forEach((boundary) => {
             boundary.draw();
-        });  
+        });      
     }
 });
