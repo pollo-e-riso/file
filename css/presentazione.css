@@ -91,7 +91,7 @@ body, html {
   background-color: black;
   border: 4px solid rgb(190, 190, 22);
   border-radius: 10px;
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 350%;
   padding: 1% 2%;
   transition: background-color 0.25s;
@@ -141,7 +141,7 @@ body, html {
 
 
 .arrow {
-  border: solid white;
+  border: solid rgba(3, 2, 2, 0.28);
   border-width: 0 7px 7px 0;
   padding: 27px;
   display: inline-block;
