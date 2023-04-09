@@ -19,10 +19,10 @@ $(document).ready(function() {
   $("#freccia").on("click", function() {
     var i = $(this).find("i");
     if (i.hasClass("up")) {//controlla se ha quella classe
-      $("body").css("background-color", "red");
+      document.getElementById("mySidenav").style.bottom = "0";
       i.removeClass("up").addClass("down");
     } else {
-      $("body").css("background-color", "black");
+      document.getElementById("mySidenav").style.bottom = "-100%";
       i.removeClass("down").addClass("up");
     }
   });
