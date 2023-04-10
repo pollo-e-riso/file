@@ -3,7 +3,7 @@ import { boundarySize } from "./map.js";
 const canvas = document.querySelector("canvas");
 const canvasContext = canvas.getContext("2d");
 
-const pacmanSpeed = 3;
+const pacmanSpeed = 2;
 
 class Pacman {
     constructor(x, y, speedX, speedY) {
@@ -65,8 +65,21 @@ function pacmanMovement(pacman) {
                 break;
         }
 
-        console.log("X and Y speed: " + pacman.speedX + " " + pacman.speedY);
+        //console.log("X and Y speed: " + pacman.speedX + " " + pacman.speedY);
     });
 }
 
-export { Pacman, pacmanMovement };
+function collisionDetection(pacman, boundaries){
+    boundaries.forEach((boundary) => {
+        if(pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
+           pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
+           pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
+           pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width  
+            ){
+            pacman.speedX = 0;
+            pacman.speedY = 0;
+        }
+    });
+} 
+
+export { Pacman, pacmanMovement, collisionDetection };
