@@ -31,7 +31,7 @@ class Pacman {
     }
 }
 
-function pacmanMovement(pacman) {
+function pacmanMovement(pacman, boundaries) {
     $(document).keydown((event) => {
         let keyPressed = event.key;
 
@@ -39,31 +39,56 @@ function pacmanMovement(pacman) {
             case "w":
             case "W":
             case "ArrowUp":
-                pacman.speedX = 0;
-                pacman.speedY = -pacmanSpeed;
+                for(let i=0; i<boundaries.length; i++){
+                    if(isColliding(pacman, boundaries[i])){
+                        pacman.speedY = 0;
+                        break;
+                    } else {
+                        pacman.speedY = -pacmanSpeed;   
+                    }
+                }
                 break;
 
             case "s":
             case "S":
             case "ArrowDown":
-                pacman.speedX = 0;
-                pacman.speedY = pacmanSpeed;
+                for(let i=0; i<boundaries.length; i++){
+                    if(isColliding(pacman, boundaries[i])){
+                        pacman.speedY = 0;
+                        break;
+                    } else {
+                        pacman.speedY = pacmanSpeed;   
+                    }
+                }
                 break;
 
             case "d":
             case "D":
             case "ArrowRight":
-                pacman.speedY = 0;
-                pacman.speedX = pacmanSpeed;
+                for(let i=0; i<boundaries.length; i++){
+                    if(isColliding(pacman, boundaries[i])){
+                        pacman.speedX = 0;
+                        break;
+                    } else {
+                        pacman.speedX = pacmanSpeed;   
+                    }
+                }
                 break;
 
             case "a":
             case "A":
             case "ArrowLeft":
-                pacman.speedY = 0;
-                pacman.speedX = -pacmanSpeed;
+                for(let i=0; i<boundaries.length; i++){
+                    if(isColliding(pacman, boundaries[i])){
+                        pacman.speedX = 0;
+                        break;
+                    } else {
+                        pacman.speedX = -pacmanSpeed;   
+                    }
+                }
                 break;
         }
+
 
         //console.log("X and Y speed: " + pacman.speedX + " " + pacman.speedY);
     });
@@ -71,15 +96,18 @@ function pacmanMovement(pacman) {
 
 function collisionDetection(pacman, boundaries){
     boundaries.forEach((boundary) => {
-        if(pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
-           pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
-           pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
-           pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width  
-            ){
+        if(isColliding(pacman, boundary)){
             pacman.speedX = 0;
             pacman.speedY = 0;
         }
-    });
-} 
+    });    
+}
+
+function isColliding(pacman, boundary){
+    return (pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
+            pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
+            pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
+            pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width)
+}
 
 export { Pacman, pacmanMovement, collisionDetection };

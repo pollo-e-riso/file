@@ -13,7 +13,7 @@ const boundariesArray = createBoundaries();
 canvas.width = boundaryAmountHorizontal * boundarySize - 180;
 canvas.height = innerHeight;
 
-pacmanMovement(pacman);
+pacmanMovement(pacman, boundariesArray);
 gameLoop();
 
 function gameLoop() {
@@ -23,4 +23,3 @@ function gameLoop() {
     drawBoundaries(boundariesArray);
     collisionDetection(pacman, boundariesArray);
 }
-
