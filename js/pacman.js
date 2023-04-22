@@ -1,6 +1,6 @@
 $(document).ready(() => {
 
-    //Creazione del tag canvas
+    //Creazione del tag canvass
     const canvas = document.querySelector("canvas");
     const canvasContext = canvas.getContext("2d");
 
