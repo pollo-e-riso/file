@@ -24,7 +24,7 @@ $(document).ready(() => {
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = boundaryAmountHorizontal * boundarySize - 240;
-    canvas.height = boundaryAmountVertical * boundarySize - 280;
+    canvas.height = boundaryAmountVertical * boundarySize - 270;
 
 
     //La mappa del gioco
@@ -108,10 +108,7 @@ $(document).ready(() => {
                 pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
                 pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width)
     }
-    
-    //La classe per definire il pacman
     class Pacman{
-        //costruttore con la posizione x/y, velocita' x/y e il raggio del pacman
         constructor(x, y, speedX, speedY){
             this.x = x;
             this.y = y;
@@ -120,8 +117,9 @@ $(document).ready(() => {
             this.radius = 18;
         }
         
-        //metodo per disegnare un cerchio 
-        draw(){            
+        draw(){
+            let pacmanStartPosition = boundarySize + boundarySize/2;
+            
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
             canvasContext.fillStyle = "yellow";
@@ -129,7 +127,6 @@ $(document).ready(() => {
             canvasContext.closePath();
         }
         
-        //metodo per spostare pacman
         move(){
             this.draw();
             this.x += this.speedX;
@@ -137,8 +134,9 @@ $(document).ready(() => {
         }
     }
     
-    //funzione per creare il pacman in certo punto
-    function createPacman(){        
+    function createPacman(){
+        let pacmanStartPosition = boundarySize + boundarySize / 2;
+        
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
     
@@ -182,7 +180,6 @@ $(document).ready(() => {
     
     
     //GAME
-    //La sezione per utilizzare tutti i metodi e funzione del gioco
     createBoundaries();
     createPacman()
     pacmanMovement();
