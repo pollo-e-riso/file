@@ -5,7 +5,7 @@ $(document).ready(() => {
     const canvasContext = canvas.getContext("2d");
 
     //Dimensioni di un quadrato
-    const boundarySize = 30;
+    const boundarySize = 40;
     
     //La quantita' orizzontale dei quadrati
     const boundaryAmountHorizontal = 27;
@@ -20,8 +20,8 @@ $(document).ready(() => {
     const boundaries = [];
 
     //Impostazione della grandezza e altezza del tag canvas
-    canvas.width = boundaryAmountHorizontal * boundarySize - 180;
-    canvas.height = boundaryAmountVertical * boundarySize - 210;
+    canvas.width = boundaryAmountHorizontal * boundarySize - 240;
+    canvas.height = boundaryAmountVertical * boundarySize - 270;
 
 
     //La mappa del gioco
@@ -111,7 +111,7 @@ $(document).ready(() => {
             this.y = y;
             this.speedX = speedX;
             this.speedY = speedY;
-            this.radius = 13;
+            this.radius = 18;
         }
         
         draw(){
