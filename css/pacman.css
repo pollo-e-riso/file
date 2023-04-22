@@ -2,15 +2,13 @@ body {
   background-image: url("../img/sfondoblack.jpg");
   margin: 0;
   overflow: hidden;
-
 }
 
 canvas {
   position: absolute;
-  top: 40%;
-  background-color: black;
-  left: 29%;
   top: 50%;
-  transform: translateX(-50%);
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
 }
