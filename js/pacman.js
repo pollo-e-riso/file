@@ -1,20 +1,31 @@
 $(document).ready(() => {
 
+    //Creazione del tag canvas
     const canvas = document.querySelector("canvas");
     const canvasContext = canvas.getContext("2d");
 
+    //Dimensioni di un quadrato
     const boundarySize = 30;
+    
+    //La quantita' orizzontale dei quadrati
     const boundaryAmountHorizontal = 27;
+    
+    //La quantita' verticale dei quadrati
+    const boundaryAmountVertical = 30;
 
+    //La velocita' del pacman
     const pacmanSpeed = 3;
 
-    //god knows why it's 180, but it works
+    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBoundaries())
+    const boundaries = [];
+
+    //Impostazione della grandezza e altezza del tag canvas
     canvas.width = boundaryAmountHorizontal * boundarySize - 180;
-    canvas.height = innerHeight;
+    canvas.height = boundaryAmountVertical * boundarySize - 210;
 
 
-    //MAP
-    //27 * 30
+    //La mappa del gioco
+    //Dimensioni totali: 27 * 30
     const map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -40,6 +51,7 @@ $(document).ready(() => {
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
+    //La classe per definire i confini
     class Boundary{
         constructor(x, y){
             this.x = x;
@@ -54,10 +66,8 @@ $(document).ready(() => {
         }
     }
 
+    //La funzione per creare i confini scorrendo un array
     function createBoundaries(){
-
-        boundaries = [];
-
         map.forEach((row, rowIndex) => {
             row.forEach((boundary, boundaryIndex) => {
                 if(boundary == 1){
@@ -69,6 +79,7 @@ $(document).ready(() => {
         drawBoundaries();
     }
 
+    //La funzione per disegnare i confini
     function drawBoundaries(){
         boundaries.forEach((boundary) => {
             boundary.draw();
@@ -76,6 +87,8 @@ $(document).ready(() => {
     }
     
     
+
+
     //PACMAN
     function collisionDetection(){
         boundaries.forEach((boundary) => {
