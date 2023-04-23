@@ -14,7 +14,7 @@ $(document).ready(() => {
     const boundaryAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 5;
+    const pacmanSpeed = 3;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = boundarySize + boundarySize / 2;
@@ -25,6 +25,25 @@ $(document).ready(() => {
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = boundaryAmountHorizontal * boundarySize - 240;
     canvas.height = boundaryAmountVertical * boundarySize - 270;
+
+    //Un oggetto che contiene tutti le possibili direzioni
+    const directions = {
+        up: {
+            pressed: false
+        },
+        down: {
+            pressed: false
+        },
+        left: {
+            pressed: false
+        },
+        right: {
+            pressed: false
+        }
+    }
+
+    //Una stringa che contiene la direzione attuale del pacman
+    var lastDirection = "";
 
 
     //La mappa del gioco
@@ -140,56 +159,101 @@ $(document).ready(() => {
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
     
-    function pacmanMovement(){
-        $(document).keydown((event) => {
-            let keyPressed = event.key;
-            
-            switch(keyPressed){
+    //La funzione che controlla l'ultima direzione premuta
+    function pacmanGetDirection(){
+        $(document).keydown((event) => {         
+            switch(event.key){
                 case "w":
                 case "W":
                 case "ArrowUp":
-                    pacman.speedX = 0;
-                    pacman.speedY = -pacmanSpeed;
+                    directions.up.pressed = true;
+                    lastDirection = "up";
                     break;
                 
                 case "s":
                 case "S":
                 case "ArrowDown":
-                    pacman.speedX = 0;
-                    pacman.speedY = pacmanSpeed;
+                    directions.down.pressed = true;
+                    lastDirection = "down";
                     break;
                     
                 case "d":
                 case "D":
                 case "ArrowRight":
-                    pacman.speedY = 0;
-                    pacman.speedX = pacmanSpeed;
+                    directions.right.pressed = true;
+                    lastDirection = "right";
                     break;
 
                 case "a":
                 case "A":
                 case "ArrowLeft":
-                    pacman.speedY = 0;
-                    pacman.speedX = -pacmanSpeed;
+                    directions.left.pressed = true;
+                    lastDirection = "left";
                     break;
             }
+            console.log(directions.up.pressed);
+            console.log(lastDirection);
+        });
 
-            console.log("X and Y speed: " + pacman.speedX + " " + pacman.speedY); 
+        $(document).keyup((event) => {
+            switch(event.key){
+                case "w":
+                case "W":
+                case "ArrowUp":
+                    directions.up.pressed = false;
+                    break;
+                
+                case "s":
+                case "S":
+                case "ArrowDown":
+                    directions.down.pressed = false;
+                    break;
+                    
+                case "d":
+                case "D":
+                case "ArrowRight":
+                    directions.right.pressed = false;
+                    break;
+
+                case "a":
+                case "A":
+                case "ArrowLeft":
+                    directions.left.pressed = false;
+                    break;
+            }
+            console.log(directions.up.pressed);
         });
     }
     
+    //La funzione che cambia la velocità di pacman in base alla direzione premuta, 
+    //controllando che tasta sia premuta ultimamente
+    function pacmanSetSpeed(){
+        pacman.speedX = 0;
+        pacman.speedY = 0;
+
+        if(directions.up.pressed && lastDirection == "up"){
+            pacman.speedY = -pacmanSpeed;
+        }else if(directions.down.pressed && lastDirection == "down"){
+            pacman.speedY = pacmanSpeed;
+        }else if(directions.left.pressed && lastDirection == "left"){
+            pacman.speedX = -pacmanSpeed;
+        }else if(directions.right.pressed && lastDirection == "right"){
+            pacman.speedX = pacmanSpeed;
+        }
+    }
     
     //GAME
     createBoundaries();
     createPacman()
-    pacmanMovement();
     gameLoop();
+    pacmanGetDirection();
     
+    //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop(){
         requestAnimationFrame(gameLoop);
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        pacmanSetSpeed();
         pacman.move();
-        collisionDetection();
         drawBoundaries();
     }
 });
