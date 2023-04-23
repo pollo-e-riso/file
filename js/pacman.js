@@ -112,21 +112,6 @@ $(document).ready(() => {
 
 
     //PACMAN
-    function collisionDetection(){
-        boundaries.forEach((boundary) => {
-            if(isColliding(boundary)){
-                pacman.speedX = 0;
-                pacman.speedY = 0;
-            }
-        });    
-    }
-    
-    function isColliding(boundary){
-        return (pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
-                pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
-                pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
-                pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width)
-    }
     class Pacman{
         constructor(x, y, speedX, speedY){
             this.x = x;
@@ -191,8 +176,8 @@ $(document).ready(() => {
                     lastDirection = "left";
                     break;
             }
-            console.log(directions.up.pressed);
-            console.log(lastDirection);
+            //console.log(directions.up.pressed);
+            //console.log(lastDirection);
         });
 
         $(document).keyup((event) => {
@@ -221,7 +206,7 @@ $(document).ready(() => {
                     directions.left.pressed = false;
                     break;
             }
-            console.log(directions.up.pressed);
+            //console.log(directions.up.pressed);
         });
     }
     
@@ -241,6 +226,23 @@ $(document).ready(() => {
             pacman.speedX = pacmanSpeed;
         }
     }
+
+    function collisionDetection(){
+        boundaries.forEach((boundary) => {
+            if(isColliding(boundary)){
+                pacman.speedX = 0;
+                pacman.speedY = 0;
+                console.log("collision");
+            }
+        });    
+    }
+    
+    function isColliding(boundary){
+        return (pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
+                pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
+                pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
+                pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width)
+    }
     
     //GAME
     createBoundaries();
@@ -253,6 +255,7 @@ $(document).ready(() => {
         requestAnimationFrame(gameLoop);
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         pacmanSetSpeed();
+        collisionDetection();
         pacman.move();
         drawBoundaries();
     }
