@@ -212,18 +212,25 @@ $(document).ready(() => {
     
     //La funzione che cambia la velocità di pacman in base alla direzione premuta, 
     //controllando che tasta sia premuta ultimamente
+    //cambia anche il colore della freccia la direzione di cui è attiva
     function pacmanSetSpeed(){
         pacman.speedX = 0;
         pacman.speedY = 0;
 
+        $(".arrow-button").css("background-color", "white");
+
         if(directions.up.pressed && lastDirection == "up"){
             pacman.speedY = -pacmanSpeed;
+            $("#arrow-up").css("background-color", "gray");
         }else if(directions.down.pressed && lastDirection == "down"){
             pacman.speedY = pacmanSpeed;
+            $("#arrow-down").css("background-color", "gray");
         }else if(directions.left.pressed && lastDirection == "left"){
             pacman.speedX = -pacmanSpeed;
+            $("#arrow-left").css("background-color", "gray");
         }else if(directions.right.pressed && lastDirection == "right"){
             pacman.speedX = pacmanSpeed;
+            $("#arrow-right").css("background-color", "gray");
         }
     }
 
