@@ -14,7 +14,7 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 3;
+    const pacmanSpeed = 2;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
@@ -24,7 +24,6 @@ $(document).ready(() => {
 
     //Boolean per accendere o spegnere la modalita' debug
     const enableDebug = false;
-    const collisionPredictDebug = true;
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = borderAmountHorizontal * borderSize - 240;
@@ -53,14 +52,31 @@ $(document).ready(() => {
     //La mappa del gioco
     //Dimensioni totali: 27 * 30
     const map = [
-        [1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1]
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
+    
     //La classe per definire i confini
     class Border{
         constructor(x, y){
@@ -204,9 +220,6 @@ $(document).ready(() => {
     //controllando che tasta sia premuta ultimamente
     //cambia anche il colore della freccia la direzione di cui è attiva
     function pacmanSetSpeed(){
-        pacman.speedX = 0;
-        pacman.speedY = 0;
-
         $(".arrow-button").css("background-color", "white");
 
         if(directions.up.pressed && lastDirection == "up"){
@@ -215,6 +228,11 @@ $(document).ready(() => {
 
                 if(isColliding({...pacman, speedX:0, speedY:-pacmanSpeed}, border)){
                     pacman.speedY = 0;
+                    
+                    if(enableDebug){
+                        console.log("future collision");
+                    }
+
                     break;
                 } else {
                     pacman.speedY = -pacmanSpeed;
@@ -227,6 +245,11 @@ $(document).ready(() => {
 
                 if(isColliding({...pacman, speedX:0, speedY:pacmanSpeed}, border)){
                     pacman.speedY = 0;
+
+                    if(enableDebug){
+                        console.log("future collision");
+                    }
+
                     break;
                 } else {
                     pacman.speedY = pacmanSpeed;
@@ -239,6 +262,11 @@ $(document).ready(() => {
 
                 if(isColliding({...pacman, speedX:-pacmanSpeed, speedY:0}, border)){
                     pacman.speedX = 0;
+
+                    if(enableDebug){
+                        console.log("future collision");
+                    }
+
                     break;
                 } else {
                     pacman.speedX = -pacmanSpeed;
@@ -251,6 +279,11 @@ $(document).ready(() => {
 
                 if(isColliding({...pacman, speedX:pacmanSpeed, speedY:0}, border)){
                     pacman.speedX = 0;
+
+                    if(enableDebug){
+                        console.log("future collision");
+                    }
+
                     break;
                 } else {
                     pacman.speedX = pacmanSpeed;
@@ -267,8 +300,10 @@ $(document).ready(() => {
             if(isColliding(pacman, border)){
                 pacman.speedX = 0;
                 pacman.speedY = 0;
-                if(enableDebug)
+
+                if(enableDebug){
                     console.log("collision");
+                }
             }
         });    
     }
