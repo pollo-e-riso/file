@@ -5,26 +5,30 @@ $(document).ready(() => {
     const canvasContext = canvas.getContext("2d");
 
     //Dimensioni di un quadrato
-    const boundarySize = 40;
+    const borderSize = 40;
     
     //La quantita' orizzontale dei quadrati
-    const boundaryAmountHorizontal = 27;
+    const borderAmountHorizontal = 27;
     
     //La quantita' verticale dei quadrati
-    const boundaryAmountVertical = 30;
+    const borderAmountVertical = 30;
 
     //La velocita' del pacman
     const pacmanSpeed = 3;
 
     //La posizione iniziale del pacman
-    const pacmanStartPosition = boundarySize + boundarySize / 2;
+    const pacmanStartPosition = borderSize + borderSize / 2;
 
-    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBoundaries())
-    const boundaries = [];
+    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBorders())
+    const borders = [];
+
+    //Boolean per accendere o spegnere la modalita' debug
+    const enableDebug = false;
+    const collisionPredictDebug = true;
 
     //Impostazione della grandezza e altezza del tag canvas
-    canvas.width = boundaryAmountHorizontal * boundarySize - 240;
-    canvas.height = boundaryAmountVertical * boundarySize - 270;
+    canvas.width = borderAmountHorizontal * borderSize - 240;
+    canvas.height = borderAmountVertical * borderSize - 270;
 
     //Un oggetto che contiene tutti le possibili direzioni
     const directions = {
@@ -49,37 +53,21 @@ $(document).ready(() => {
     //La mappa del gioco
     //Dimensioni totali: 27 * 30
     const map = [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-        [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1]
     ]
     //La classe per definire i confini
-    class Boundary{
+    class Border{
         constructor(x, y){
             this.x = x;
             this.y = y;
-            this.width = boundarySize;
-            this.height = boundarySize;
+            this.width = borderSize;
+            this.height = borderSize;
         }
         
         draw(){
@@ -89,22 +77,22 @@ $(document).ready(() => {
     }
 
     //La funzione per creare i confini scorrendo un array
-    function createBoundaries(){
+    function createBorders(){
         map.forEach((row, rowIndex) => {
-            row.forEach((boundary, boundaryIndex) => {
-                if(boundary == 1){
-                    boundaries.push(new Boundary(boundarySize * boundaryIndex, boundarySize * rowIndex));
+            row.forEach((border, borderIndex) => {
+                if(border == 1){
+                    borders.push(new Border(borderSize * borderIndex, borderSize * rowIndex));
                 }
             });
         });
         
-        drawBoundaries();
+        drawBorders();
     }
 
     //La funzione per disegnare i confini
-    function drawBoundaries(){
-        boundaries.forEach((boundary) => {
-            boundary.draw();
+    function drawBorders(){
+        borders.forEach((border) => {
+            border.draw();
         });      
     }
     
@@ -122,7 +110,7 @@ $(document).ready(() => {
         }
         
         draw(){
-            let pacmanStartPosition = boundarySize + boundarySize/2;
+            let pacmanStartPosition = borderSize + borderSize/2;
             
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
@@ -139,7 +127,7 @@ $(document).ready(() => {
     }
     
     function createPacman(){
-        let pacmanStartPosition = boundarySize + boundarySize / 2;
+        let pacmanStartPosition = borderSize + borderSize / 2;
         
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
@@ -176,8 +164,11 @@ $(document).ready(() => {
                     lastDirection = "left";
                     break;
             }
-            //console.log(directions.up.pressed);
-            //console.log(lastDirection);
+            if(enableDebug){
+                console.log("up:" + directions.up.pressed + ", down:" + directions.down.pressed + ", right:" + directions.right.pressed + ", left:" + directions.left.pressed);
+                console.log("last direction:" + lastDirection);
+                console.log("key pressed:" + event.key)
+            }
         });
 
         $(document).keyup((event) => {
@@ -206,7 +197,6 @@ $(document).ready(() => {
                     directions.left.pressed = false;
                     break;
             }
-            //console.log(directions.up.pressed);
         });
     }
     
@@ -220,39 +210,78 @@ $(document).ready(() => {
         $(".arrow-button").css("background-color", "white");
 
         if(directions.up.pressed && lastDirection == "up"){
-            pacman.speedY = -pacmanSpeed;
+            for(let i = 0; i < borders.length; i++){
+                const border = borders[i];
+
+                if(isColliding({...pacman, speedX:0, speedY:-pacmanSpeed}, border)){
+                    pacman.speedY = 0;
+                    break;
+                } else {
+                    pacman.speedY = -pacmanSpeed;
+                }
+            }
             $("#arrow-up").css("background-color", "gray");
         }else if(directions.down.pressed && lastDirection == "down"){
-            pacman.speedY = pacmanSpeed;
+            for(let i = 0; i < borders.length; i++){
+                const border = borders[i];
+
+                if(isColliding({...pacman, speedX:0, speedY:pacmanSpeed}, border)){
+                    pacman.speedY = 0;
+                    break;
+                } else {
+                    pacman.speedY = pacmanSpeed;
+                }
+            }
             $("#arrow-down").css("background-color", "gray");
         }else if(directions.left.pressed && lastDirection == "left"){
-            pacman.speedX = -pacmanSpeed;
+            for(let i = 0; i < borders.length; i++){
+                const border = borders[i];
+
+                if(isColliding({...pacman, speedX:-pacmanSpeed, speedY:0}, border)){
+                    pacman.speedX = 0;
+                    break;
+                } else {
+                    pacman.speedX = -pacmanSpeed;
+                }
+            }
             $("#arrow-left").css("background-color", "gray");
         }else if(directions.right.pressed && lastDirection == "right"){
-            pacman.speedX = pacmanSpeed;
+            for(let i = 0; i < borders.length; i++){
+                const border = borders[i];
+
+                if(isColliding({...pacman, speedX:pacmanSpeed, speedY:0}, border)){
+                    pacman.speedX = 0;
+                    break;
+                } else {
+                    pacman.speedX = pacmanSpeed;
+                }
+            }
             $("#arrow-right").css("background-color", "gray");
         }
+
+        collisionDetection(); 
     }
 
     function collisionDetection(){
-        boundaries.forEach((boundary) => {
-            if(isColliding(boundary)){
+        borders.forEach((border) => {
+            if(isColliding(pacman, border)){
                 pacman.speedX = 0;
                 pacman.speedY = 0;
-                console.log("collision");
+                if(enableDebug)
+                    console.log("collision");
             }
         });    
     }
     
-    function isColliding(boundary){
-        return (pacman.y + pacman.radius + pacman.speedY >= boundary.y &&
-                pacman.y - pacman.radius + pacman.speedY <= boundary.y + boundary.height &&
-                pacman.x + pacman.radius + pacman.speedX >= boundary.x &&
-                pacman.x - pacman.radius + pacman.speedX <= boundary.x + boundary.width)
+    function isColliding(entity, border){
+        return (entity.y + entity.radius + entity.speedY >= border.y &&
+                entity.y - entity.radius + entity.speedY <= border.y + border.height &&
+                entity.x + entity.radius + entity.speedX >= border.x &&
+                entity.x - entity.radius + entity.speedX <= border.x + border.width)
     }
     
     //GAME
-    createBoundaries();
+    createBorders();
     createPacman()
     gameLoop();
     pacmanGetDirection();
@@ -262,9 +291,8 @@ $(document).ready(() => {
         requestAnimationFrame(gameLoop);
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         pacmanSetSpeed();
-        collisionDetection();
         pacman.move();
-        drawBoundaries();
+        drawBorders();
     }
 });
 
