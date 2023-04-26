@@ -14,7 +14,7 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 2;
+    const pacmanSpeed = 5;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
