@@ -14,13 +14,17 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 5;
+    const pacmanSpeed = 3;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
 
-    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBorders())
+    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBordersArray())
     const borders = [];
+    
+    //La grandezza dello spazio tra i bordi
+    const borderSpaceWidth = borderSize / 1.3;
+    const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
     const enableDebug = false;
@@ -79,37 +83,83 @@ $(document).ready(() => {
     
     //La classe per definire i confini
     class Border{
-        constructor(x, y){
+        constructor(x, y, width, height, color){
             this.x = x;
             this.y = y;
             this.width = borderSize;
             this.height = borderSize;
-        }
-        
-        draw(){
-            canvasContext.fillStyle = "rgb(27, 55, 212)";
-            canvasContext.fillRect(this.x, this.y, this.width, this.height);  
+            this.color = color;
         }
     }
 
-    //La funzione per creare i confini scorrendo un array
-    function createBorders(){
-        map.forEach((row, rowIndex) => {
-            row.forEach((border, borderIndex) => {
-                if(border == 1){
-                    borders.push(new Border(borderSize * borderIndex, borderSize * rowIndex));
+    function createBordersArray(){
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if(map[i][j] == 1){
+                    borders.push(new Border(j * borderSize, i * borderSize));   
                 }
-            });
-        });
-        
-        drawBorders();
+            }
+        }
     }
 
-    //La funzione per disegnare i confini
+    function createRectangle(x, y, width, height, color){
+        canvasContext.fillStyle = color;
+        canvasContext.fillRect(x, y, width, height);
+    }
+
     function drawBorders(){
-        borders.forEach((border) => {
-            border.draw();
-        });      
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if (map[i][j] == 1) {
+                    createRectangle(
+                        j * borderSize,
+                        i * borderSize,
+                        borderSize,
+                        borderSize,
+                        "rgb(40, 33, 204)"
+                    );
+                    if (j > 0 && map[i][j - 1] == 1) {
+                        createRectangle(
+                            j * borderSize,
+                            i * borderSize + borderOffset,
+                            borderSpaceWidth + borderOffset,
+                            borderSpaceWidth,
+                            "black"
+                        );
+                    }
+    
+                    if (j < map[0].length - 1 && map[i][j + 1] == 1) {
+                        createRectangle(
+                            j * borderSize + borderOffset,
+                            i * borderSize + borderOffset,
+                            borderSpaceWidth + borderOffset,
+                            borderSpaceWidth,
+                            "black"
+                        );
+                    }
+    
+                    if (i < map.length - 1 && map[i + 1][j] == 1) {
+                        createRectangle(
+                            j * borderSize + borderOffset,
+                            i * borderSize + borderOffset,
+                            borderSpaceWidth,
+                            borderSpaceWidth + borderOffset,
+                            "black"
+                        );
+                    }
+    
+                    if (i > 0 && map[i - 1][j] == 1) {
+                        createRectangle(
+                            j * borderSize + borderOffset,
+                            i * borderSize,
+                            borderSpaceWidth,
+                            borderSpaceWidth + borderOffset,
+                            "black"
+                        );
+                    }
+                }
+            }
+        }
     }
     
     
@@ -316,8 +366,9 @@ $(document).ready(() => {
     }
     
     //GAME
-    createBorders();
-    createPacman()
+    drawBorders();
+    createBordersArray();
+    createPacman();
     gameLoop();
     pacmanGetDirection();
     
