@@ -14,7 +14,7 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 3;
+    const pacmanSpeed = 4;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
@@ -27,7 +27,7 @@ $(document).ready(() => {
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
-    const enableDebug = false;
+    const enableDebug = true;
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = borderAmountHorizontal * borderSize - 240;
@@ -91,7 +91,7 @@ $(document).ready(() => {
             this.color = color;
         }
     }
-
+//aggiunge hitbox ai bordi
     function createBordersArray(){
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
@@ -118,6 +118,7 @@ $(document).ready(() => {
                         borderSize,
                         "rgb(40, 33, 204)"
                     );
+                    //servono per spostare il bordo e togliere i bordi inutili
                     if (j > 0 && map[i][j - 1] == 1) {
                         createRectangle(
                             j * borderSize,
@@ -175,9 +176,7 @@ $(document).ready(() => {
             this.radius = 18;
         }
         
-        draw(){
-            let pacmanStartPosition = borderSize + borderSize/2;
-            
+        draw(){            
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
             canvasContext.fillStyle = "yellow";
@@ -192,9 +191,7 @@ $(document).ready(() => {
         }
     }
     
-    function createPacman(){
-        let pacmanStartPosition = borderSize + borderSize / 2;
-        
+    function createPacman(){ 
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
     

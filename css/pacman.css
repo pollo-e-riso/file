@@ -11,6 +11,7 @@ canvas {
   transform: translate(-50%, -50%);
   width: 700px;
   height: 700px;
+  background-color: black;
 }
 
 .arrow-button {
