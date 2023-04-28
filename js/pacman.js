@@ -18,11 +18,17 @@ $(document).ready(() => {
     //La velocita' del pacman
     const pacmanSpeed = 3;
 
+    //Il raggio del pacman
+    const pacmanRadius = 18;
+
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
 
     //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBordersArray())
     const borders = [];
+
+    //Array con le palline
+    const pellets = [];
     
     //La grandezza dello spazio tra i bordi
     const borderSpaceWidth = borderSize / 1.3;  //secondo valore deve essere piu' di 1
@@ -56,29 +62,31 @@ $(document).ready(() => {
 
     //La mappa del gioco
     //Dimensioni totali: 27 * 30
+    //0 = spazio vuoto
+    //1 = confine
     const map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-        [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
+        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
+        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
+        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
+        [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
+        [1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1],
+        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
+        [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
     
@@ -179,7 +187,7 @@ $(document).ready(() => {
             this.y = y;
             this.speedX = speedX;
             this.speedY = speedY;
-            this.radius = 18;
+            this.radius = pacmanRadius;
         }
         
         //il metodo per disegnare un cerchio
@@ -289,7 +297,7 @@ $(document).ready(() => {
                     pacman.speedY = 0;
                     
                     if(enableDebug){
-                        console.log("future collision");
+                        console.log("future border collision");
                     }
 
                     break;
@@ -307,7 +315,7 @@ $(document).ready(() => {
                     pacman.speedY = 0;
 
                     if(enableDebug){
-                        console.log("future collision");
+                        console.log("future border collision");
                     }
 
                     break;
@@ -324,7 +332,7 @@ $(document).ready(() => {
                     pacman.speedX = 0;
 
                     if(enableDebug){
-                        console.log("future collision");
+                        console.log("future border collision");
                     }
 
                     break;
@@ -341,7 +349,7 @@ $(document).ready(() => {
                     pacman.speedX = 0;
 
                     if(enableDebug){
-                        console.log("future collision");
+                        console.log("future border collision");
                     }
 
                     break;
@@ -365,7 +373,7 @@ $(document).ready(() => {
                 pacman.speedY = 0;
 
                 if(enableDebug){
-                    console.log("collision");
+                    console.log("border collision");
                 }
             }
         });    
@@ -380,12 +388,66 @@ $(document).ready(() => {
                 entity.x + entity.radius + entity.speedX >= border.x &&                 //right
                 entity.x - entity.radius + entity.speedX <= border.x + border.width)    //left
     }
-    
+    //PELLET
+    class Pellet{
+        constructor(x, y){
+            this.x = x;
+            this.y = y;
+            this.radius = pacmanRadius / 3.8;
+        }
+        
+        //il metodo per disegnare un cerchio
+        draw(){            
+            canvasContext.beginPath();
+            canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
+            canvasContext.fillStyle = "orange";
+            canvasContext.fill();
+            canvasContext.closePath();
+        }
+    }
+
+    //La funzione che crea un array con le palline
+    //Una funzione separata perché deve essere chiamata solo una volta
+    function createPelletsArray(){
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if(map[i][j] == 2){
+                    pellets.push(new Pellet( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2));
+                }
+            }
+        }
+    }
+
+    //La funzione che disegna le palline
+    function drawPellets(){
+        pellets.forEach((pellet) => {
+            pellet.draw();
+        });
+    }
+
+    //La funzione che controlla se pacman collide con una pallina
+    //Se sì, la pallina viene rimossa dall'array
+    function pelletsCollision(){
+        for(let i = pellets.length - 1; i >= 0; i--){ //scorre l'array al contrario per evitare problemi con processo di disegnamento delle palline
+            const pellet = pellets[i];
+            //se la distanza tra il centro di pacman e il centro della pallina è minore della somma dei loro raggi
+            if(Math.hypot(pellet.x - pacman.x, pellet.y - pacman.y) < pacman.radius + pellet.radius){
+                if(enableDebug){
+                    console.log("pellet collision");
+                }
+
+                pellets.splice(i, 1);
+            }
+        }
+    }
+
     //GAME
     drawBorders();
+    createPelletsArray();
     createBordersArray();
     createPacman();
     gameLoop();
+    drawPellets();
     pacmanGetDirection();
     
     //La funzione che si ripete ogni frame e chiama le altre funzioni
@@ -393,7 +455,9 @@ $(document).ready(() => {
         requestAnimationFrame(gameLoop);                            //richiama la funzione gameLoop 60 volte al secondo
         canvasContext.clearRect(0, 0, canvas.width, canvas.height); //pulisce il canvas ogni frame per evitare che pacman lasci una traccia
         pacmanSetSpeed();
+        pelletsCollision();
         pacman.move();
+        drawPellets();
         drawBorders();
     }
 });
