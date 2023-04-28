@@ -1,10 +1,12 @@
 $(document).ready(() => {
 
-    //Creazione del tag canvass
+    //Selezione del tag canvass
     const canvas = document.querySelector("canvas");
+
+    //Creazione del contesto 2d
     const canvasContext = canvas.getContext("2d");
 
-    //Dimensioni di un quadrato
+    //Dimensioni di un confine(e' un quadrato quindi serve solo un valore per la larghezza e l'altezza)
     const borderSize = 40;
     
     //La quantita' orizzontale dei quadrati
@@ -14,7 +16,7 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 4;
+    const pacmanSpeed = 3;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
@@ -23,7 +25,7 @@ $(document).ready(() => {
     const borders = [];
     
     //La grandezza dello spazio tra i bordi
-    const borderSpaceWidth = borderSize / 1.3;
+    const borderSpaceWidth = borderSize / 1.3;  //secondo valore deve essere piu' di 1
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
@@ -51,7 +53,6 @@ $(document).ready(() => {
 
     //Una stringa che contiene la direzione attuale del pacman
     var lastDirection = "";
-
 
     //La mappa del gioco
     //Dimensioni totali: 27 * 30
@@ -91,17 +92,18 @@ $(document).ready(() => {
             this.color = color;
         }
     }
-//aggiunge hitbox ai bordi
+    //aggiunge hitbox ai bordi
     function createBordersArray(){
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
                 if(map[i][j] == 1){
-                    borders.push(new Border(j * borderSize, i * borderSize));   
+                    borders.push(new Border(j * borderSize, i * borderSize));   //aggiunge un nuovo confine all'array con coordinate x e y
                 }
             }
         }
     }
 
+    //La funzione per disegnare i rettagoli
     function createRectangle(x, y, width, height, color){
         canvasContext.fillStyle = color;
         canvasContext.fillRect(x, y, width, height);
@@ -110,25 +112,27 @@ $(document).ready(() => {
     function drawBorders(){
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
+                //se il valore è 1 disegna il rettangolo
                 if (map[i][j] == 1) {
                     createRectangle(
-                        j * borderSize,
-                        i * borderSize,
-                        borderSize,
-                        borderSize,
-                        "rgb(40, 33, 204)"
+                        j * borderSize,     //x
+                        i * borderSize,     //y
+                        borderSize,         //width
+                        borderSize,         //height
+                        "rgb(40, 33, 204)"  //color
                     );
-                    //servono per spostare il bordo e togliere i bordi inutili
+                    //se c'è un confine sotto disegna un rettangolo nero e lo sposta così da rimuovere il lato tra due confini
                     if (j > 0 && map[i][j - 1] == 1) {
                         createRectangle(
                             j * borderSize,
-                            i * borderSize + borderOffset,
+                            i * borderSize + borderOffset,  
                             borderSpaceWidth + borderOffset,
                             borderSpaceWidth,
                             "black"
                         );
                     }
     
+                    //se c'è un confine sopra disegna un rettangolo nero e lo sposta così da rimuovere il lato tra due confini
                     if (j < map[0].length - 1 && map[i][j + 1] == 1) {
                         createRectangle(
                             j * borderSize + borderOffset,
@@ -139,6 +143,7 @@ $(document).ready(() => {
                         );
                     }
     
+                    //se c'è un confine a destra disegna un rettangolo nero e lo sposta così da rimuovere il lato tra due confini
                     if (i < map.length - 1 && map[i + 1][j] == 1) {
                         createRectangle(
                             j * borderSize + borderOffset,
@@ -149,6 +154,7 @@ $(document).ready(() => {
                         );
                     }
     
+                    //se c'è un confine a sinistra disegna un rettangolo nero e lo sposta così da rimuovere il lato tra due confini
                     if (i > 0 && map[i - 1][j] == 1) {
                         createRectangle(
                             j * borderSize + borderOffset,
@@ -176,6 +182,7 @@ $(document).ready(() => {
             this.radius = 18;
         }
         
+        //il metodo per disegnare un cerchio
         draw(){            
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
@@ -184,6 +191,7 @@ $(document).ready(() => {
             canvasContext.closePath();
         }
         
+        //il metodo per aggiornare la posizione del pacman
         move(){
             this.draw();
             this.x += this.speedX;
@@ -191,6 +199,7 @@ $(document).ready(() => {
         }
     }
     
+    //La funzione che crea il pacman in posizione specificata
     function createPacman(){ 
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
@@ -234,6 +243,7 @@ $(document).ready(() => {
             }
         });
 
+        //se un tasto viene rilasciato, l'ultima direzione viene impostata a false
         $(document).keyup((event) => {
             switch(event.key){
                 case "w":
@@ -265,7 +275,7 @@ $(document).ready(() => {
     
     //La funzione che cambia la velocità di pacman in base alla direzione premuta, 
     //controllando che tasta sia premuta ultimamente
-    //cambia anche il colore della freccia la direzione di cui è attiva
+    //cambia anche il colore della freccia, la direzione di cui è attiva
     function pacmanSetSpeed(){
         $(".arrow-button").css("background-color", "white");
 
@@ -273,7 +283,9 @@ $(document).ready(() => {
             for(let i = 0; i < borders.length; i++){
                 const border = borders[i];
 
+                //passa un pacman con la velocità impostata a quella che avrebbe se premessimo il tasto
                 if(isColliding({...pacman, speedX:0, speedY:-pacmanSpeed}, border)){
+                    //se ci sarà una collisione, la velocità di pacman viene impostata a 0
                     pacman.speedY = 0;
                     
                     if(enableDebug){
@@ -282,6 +294,7 @@ $(document).ready(() => {
 
                     break;
                 } else {
+                    //se non ci sarà una collisione, la velocità di pacman viene impostata a quella che avrebbe se premessimo il tasto
                     pacman.speedY = -pacmanSpeed;
                 }
             }
@@ -339,11 +352,14 @@ $(document).ready(() => {
             $("#arrow-right").css("background-color", "gray");
         }
 
+        //chiamata della funzione che controlla le collisioni
         collisionDetection(); 
     }
 
+    //La funzione che controlla le collisioni scorrendo l'array con gli hitbox dei bordi
     function collisionDetection(){
         borders.forEach((border) => {
+            //se pacman collide con qualsiasi bordo, la sua velocità viene impostata a 0
             if(isColliding(pacman, border)){
                 pacman.speedX = 0;
                 pacman.speedY = 0;
@@ -355,11 +371,14 @@ $(document).ready(() => {
         });    
     }
     
+    //La funzione che prenda la posizione x/y del centro di pacman, aggiunge il suo raggio 
+    //e la velocità in direzione appropriato e poi controlla se valore ottenuto è maggiore/minore
+    //di quello del bordo 
     function isColliding(entity, border){
-        return (entity.y + entity.radius + entity.speedY >= border.y &&
-                entity.y - entity.radius + entity.speedY <= border.y + border.height &&
-                entity.x + entity.radius + entity.speedX >= border.x &&
-                entity.x - entity.radius + entity.speedX <= border.x + border.width)
+        return (entity.y + entity.radius + entity.speedY >= border.y &&                 //down
+                entity.y - entity.radius + entity.speedY <= border.y + border.height && //up
+                entity.x + entity.radius + entity.speedX >= border.x &&                 //right
+                entity.x - entity.radius + entity.speedX <= border.x + border.width)    //left
     }
     
     //GAME
@@ -371,8 +390,8 @@ $(document).ready(() => {
     
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop(){
-        requestAnimationFrame(gameLoop);
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(gameLoop);                            //richiama la funzione gameLoop 60 volte al secondo
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height); //pulisce il canvas ogni frame per evitare che pacman lasci una traccia
         pacmanSetSpeed();
         pacman.move();
         drawBorders();
