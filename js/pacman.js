@@ -75,8 +75,8 @@ $(document).ready(() => {
         [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-        [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 3, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 4, 5, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
@@ -440,7 +440,58 @@ $(document).ready(() => {
             }
         }
     }
+        //GHOST
+        class Ghost{
+            constructor(x, y, speedX, speedY, color){
+                this.x = x;
+                this.y = y;
+                this.speedX = speedX;
+                this.speedY = speedY;
+                this.radius = pacmanRadius;
+                this.color = color;
+            }
+            
+            //il metodo per disegnare un cerchio
+            draw(){            
+                canvasContext.beginPath();
+                canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2); 
+                canvasContext.fillStyle = this.color;
+                canvasContext.fill();
+                canvasContext.closePath();
+            }
+            
+            //il metodo per aggiornare la posizione del pacman
+            move(){
+                this.draw();
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+        }
+    const ghosts = [
 
+    ]
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if(map[i][j] == 3){
+                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"red"));
+            }
+            if(map[i][j] == 4){
+                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"green"));
+            }
+            if(map[i][j] == 5){
+                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"blue"));
+            }
+
+
+        }
+    }
+
+    function drawGhost(){
+        ghosts.forEach((ghost) => {
+            ghost.draw();
+        });
+    }
+        
     //GAME
     drawBorders();
     createPelletsArray();
@@ -459,6 +510,7 @@ $(document).ready(() => {
         pacman.move();
         drawPellets();
         drawBorders();
+        drawGhost();
     }
 });
 
