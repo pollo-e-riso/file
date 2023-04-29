@@ -436,7 +436,7 @@ $(document).ready(() => {
                     console.log("pellet collision");
                 }
 
-                pellets.splice(i, 1);
+                pellets.splice(i, 1);//cancella la pallina corrente dall'array
             }
         }
     }
