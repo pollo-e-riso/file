@@ -76,7 +76,7 @@ $(document).ready(() => {
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 3, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 4, 5, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 6, 4, 5, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
@@ -479,9 +479,11 @@ $(document).ready(() => {
                 ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"green"));
             }
             if(map[i][j] == 5){
-                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"blue"));
+                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"rgb(50, 112, 170)"));
             }
-
+            if(map[i][j] == 6){
+                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"rgb(146, 83, 163)"));
+            }
 
         }
     }
