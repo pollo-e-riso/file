@@ -29,17 +29,32 @@ $(document).ready(() => {
 
     //Array con le palline
     const pellets = [];
+
+    //Array con i fantasmi
+    const ghosts = [];
     
     //La grandezza dello spazio tra i bordi
     const borderSpaceWidth = borderSize / 1.3;  //secondo valore deve essere piu' di 1
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
-    const enableDebug = true;
+    const enableDebug = false;
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = borderAmountHorizontal * borderSize - 240;
     canvas.height = borderAmountVertical * borderSize - 270;
+
+    //Punteggio del giocatore
+    let score = 0;
+
+    //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
+    $("#score").text(score);
+
+    if(sessionStorage.getItem("highScore") == null) {
+        sessionStorage.setItem("highScore", 0);
+    }
+
+    $("#highScore").text(sessionStorage.getItem("highScore"));
 
     //Un oggetto che contiene tutti le possibili direzioni
     const directions = {
@@ -76,7 +91,7 @@ $(document).ready(() => {
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 3, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 6, 4, 5, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
@@ -437,10 +452,16 @@ $(document).ready(() => {
                 }
 
                 pellets.splice(i, 1);//cancella la pallina corrente dall'array
+                score += 10;
+                if(score > sessionStorage.getItem("highScore")){
+                    sessionStorage.setItem("highScore", score);
+                    $("#highScore").text(sessionStorage.getItem("highScore"));
+                }
+                $("#score").text(score);
             }
         }
     }
-        //GHOST
+        //GHOSTS
         class Ghost{
             constructor(x, y, speedX, speedY, color){
                 this.x = x;
@@ -467,24 +488,14 @@ $(document).ready(() => {
                 this.y += this.speedY;
             }
         }
-    const ghosts = [
 
-    ]
+    function createGhostsArray(){
     for (let i = 0; i < map.length; i++) {
-        for (let j = 0; j < map[0].length; j++) {
-            if(map[i][j] == 3){
-                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"red"));
+            for (let j = 0; j < map[0].length; j++) {
+                if(map[i][j] == 3){
+                    ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"red"));
+                }
             }
-            if(map[i][j] == 4){
-                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"green"));
-            }
-            if(map[i][j] == 5){
-                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"rgb(50, 112, 170)"));
-            }
-            if(map[i][j] == 6){
-                ghosts.push(new Ghost( j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, 0,"rgb(146, 83, 163)"));
-            }
-
         }
     }
 
@@ -498,9 +509,11 @@ $(document).ready(() => {
     drawBorders();
     createPelletsArray();
     createBordersArray();
+    createGhostsArray();
     createPacman();
     gameLoop();
     drawPellets();
+    drawGhost();
     pacmanGetDirection();
     
     //La funzione che si ripete ogni frame e chiama le altre funzioni
