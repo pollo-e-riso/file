@@ -16,10 +16,10 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 3;
+    const pacmanSpeed = 2;
 
     //La velocita' dei fantasmi
-    const ghostSpeed = pacmanSpeed - pacmanSpeed * 0.2;
+    const ghostSpeed = pacmanSpeed;
 
     //Il raggio del pacman
     const pacmanRadius = 18;
@@ -50,13 +50,15 @@ $(document).ready(() => {
     //Punteggio del giocatore
     let score = 0;
 
-    //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
+    //Visualizzazione del punteggio corrente all'inizio del gioco
     $("#score").text(score);
 
+    //Se non esiste un punteggio massimo, esso viene impostato a 0
     if (sessionStorage.getItem("highScore") == null) {
         sessionStorage.setItem("highScore", 0);
     }
 
+    //Visualizzazione del punteggio massimo
     $("#highScore").text(sessionStorage.getItem("highScore"));
 
     //Un oggetto che contiene tutti le possibili direzioni
@@ -135,6 +137,7 @@ $(document).ready(() => {
         canvasContext.fillRect(x, y, width, height);
     }
 
+    //La funzione per disegnare i confini e rimuovere i lati tra due confini
     function drawBorders() {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
@@ -233,6 +236,8 @@ $(document).ready(() => {
     //La funzione che controlla l'ultima direzione premuta
     function pacmanGetDirection() {
         $(document).keydown((event) => {
+            //switch per impostare la direzione del pacman in base al tasto premuto
+            //imposta anche l'ultima direzione premuta
             switch (event.key) {
                 case "w":
                 case "W":
@@ -262,6 +267,7 @@ $(document).ready(() => {
                     lastDirection = "left";
                     break;
             }
+
             if (enableDebug) {
                 console.log("up:" + directions.up.pressed + ", down:" + directions.down.pressed + ", right:" + directions.right.pressed + ", left:" + directions.left.pressed);
                 console.log("last direction:" + lastDirection);
@@ -310,6 +316,7 @@ $(document).ready(() => {
                 const border = borders[i];
 
                 //passa un pacman con la velocità impostata a quella che avrebbe se premessimo il tasto
+                //serve per voltare più semplice pacman
                 if (isColliding({ ...pacman, speedX: 0, speedY: -pacmanSpeed }, border)) {
                     //se ci sarà una collisione, la velocità di pacman viene impostata a 0
                     pacman.speedY = 0;
@@ -324,6 +331,7 @@ $(document).ready(() => {
                     pacman.speedY = -pacmanSpeed;
                 }
             }
+            //cambia il colore della freccia in base alla direzione attiva
             $("#arrow-up").css("background-color", "gray");
         } else if (directions.down.pressed && lastDirection == "down") {
             for (let i = 0; i < borders.length; i++) {
@@ -465,6 +473,8 @@ $(document).ready(() => {
         }
     }
 
+    //La funzione che controlla se due cerchi collidono trovando la distanza tra i loro centri
+    //e confrontandola con la somma dei loro raggi
     function isCollidingCircle(entity1, entity2){
         return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);   
     }
@@ -478,7 +488,7 @@ $(document).ready(() => {
             this.speedY = speedY;
             this.radius = pacmanRadius;
             this.color = color;
-            this.pastCollisions = [];
+            this.pastCollisions = [];   //array che contiene le ultime collisioni dei fantasmi
         }
 
         //il metodo per disegnare un cerchio
@@ -490,7 +500,7 @@ $(document).ready(() => {
             canvasContext.closePath();
         }
 
-        //il metodo per aggiornare la posizione del pacman
+        //il metodo per aggiornare la posizione di un fantasma
         move() {
             this.draw();
             this.x += this.speedX;
@@ -498,6 +508,7 @@ $(document).ready(() => {
         }
     }
 
+    //La funzione che crea un array con i fantasmi
     function createGhostsArray() {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
@@ -508,6 +519,7 @@ $(document).ready(() => {
         }
     }
 
+    //La funzione che disegna i fantasmi
     function drawGhost() {
         ghosts.forEach((ghost) => {
             ghost.move();
@@ -519,6 +531,9 @@ $(document).ready(() => {
 
         ghosts.forEach((ghost) => {
             borders.forEach((border) => {
+                //se l'array delle collisioni passate non contiene gia' la direzione corrente
+                //e se il fantasma collidera' con il bordo
+                //aggiungi la direzione corrente all'array delle collisioni
                 if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))){     //up
                     ghostCollisions.push("up");
                 }  
@@ -531,19 +546,19 @@ $(document).ready(() => {
                 if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)){      //right
                     ghostCollisions.push("right");
                 }  
-
-                if(ghostCollisions.length > ghost.pastCollisions.length){
-                    ghost.pastCollisions = ghostCollisions;
-                }
-
-                if(!arrayEquals(ghostCollisions, ghost.pastCollisions)){
-                }
             });
-        }); 
-    }
+            //se l'array delle collisioni correnti e' piu' lungo dell'array delle collisioni passate
+            //aggiorna l'array delle collisioni passate
+            //cosi' da aggiornare le collisioni possibili del fantasma mentre si muove
+            if(ghostCollisions.length > ghost.pastCollisions.length){
+                ghost.pastCollisions = ghostCollisions;
+            }
 
-    function arrayEquals(array1, array2) {
-        return array1.toString() == array2.toString();
+            //pastCollisions - ghostCollisions = possiblePaths
+            if(!(ghostCollisions.toString() == ghost.pastCollisions.toString())){
+                
+            }
+        });
     }
 
     //GAME
