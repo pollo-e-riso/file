@@ -53,7 +53,7 @@ $(document).ready(() => {
     //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
     $("#score").text(score);
 
-    if (sessionStorage.getItem("highScore") == null) {
+    if (sessionStorage.getItem("highScore") == null) {// controlla se l'oggetto "highScore" esiste già nell'archivio sessionStorage. Se non esiste, viene creato con un valore iniziale di 0.
         sessionStorage.setItem("highScore", 0);
     }
 
@@ -381,7 +381,7 @@ $(document).ready(() => {
         //chiamata della funzione che controlla le collisioni
         collisionDetection();
     }
-
+   
     //La funzione che controlla le collisioni scorrendo l'array con gli hitbox dei bordi
     function collisionDetection() {
         borders.forEach((border) => {
@@ -456,8 +456,8 @@ $(document).ready(() => {
 
                 pellets.splice(i, 1);//cancella la pallina corrente dall'array
                 score += 10;
-                if (score > sessionStorage.getItem("highScore")) {
-                    sessionStorage.setItem("highScore", score);
+                if (score > sessionStorage.getItem("highScore")) {//getItem mostra il valore
+                    sessionStorage.setItem("highScore", score);//setItem permette di cambiarlo
                     $("#highScore").text(sessionStorage.getItem("highScore"));
                 }
                 $("#score").text(score);
