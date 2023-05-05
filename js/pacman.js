@@ -19,7 +19,7 @@ $(document).ready(() => {
     const pacmanSpeed = 3;
 
     //La velocita' dei fantasmi
-    const ghostSpeed = pacmanSpeed - pacmanSpeed * 0.2;
+    const ghostSpeed = pacmanSpeed - 1;
 
     //Il raggio del pacman
     const pacmanRadius = 18;
@@ -41,7 +41,7 @@ $(document).ready(() => {
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
-    const enableDebug = true;
+    const enableDebug = false;
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = borderAmountHorizontal * borderSize - 240;
@@ -92,8 +92,8 @@ $(document).ready(() => {
         [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-        [2, 2, 2, 2, 2, 2, 2, 2, 1, 3, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 2, 2, 2, 1, 2, 2, 2, 1, 3, 4, 5, 1, 2, 2, 2, 1, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
@@ -381,7 +381,7 @@ $(document).ready(() => {
         //chiamata della funzione che controlla le collisioni
         collisionDetection();
     }
-   
+
     //La funzione che controlla le collisioni scorrendo l'array con gli hitbox dei bordi
     function collisionDetection() {
         borders.forEach((border) => {
@@ -465,8 +465,8 @@ $(document).ready(() => {
         }
     }
 
-    function isCollidingCircle(entity1, entity2){
-        return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);   
+    function isCollidingCircle(entity1, entity2) {
+        return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);
     }
 
     //GHOSTS
@@ -514,36 +514,81 @@ $(document).ready(() => {
         });
     }
 
-    function ghostMovement(){
+    function ghostMovement() {
         const ghostCollisions = [];
 
         ghosts.forEach((ghost) => {
             borders.forEach((border) => {
-                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))){     //up
+                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))) {     //up
                     ghostCollisions.push("up");
-                }  
-                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)){      //down
-                    ghostCollisions.push("down");
-                }   
-                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)){     //left
-                    ghostCollisions.push("left");
-                } 
-                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)){      //right
-                    ghostCollisions.push("right");
-                }  
-
-                if(ghostCollisions.length > ghost.pastCollisions.length){
-                    ghost.pastCollisions = ghostCollisions;
                 }
-
-                if(!arrayEquals(ghostCollisions, ghost.pastCollisions)){
+                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)) {      //down
+                    ghostCollisions.push("down");
+                }
+                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)) {     //left
+                    ghostCollisions.push("left");
+                }
+                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)) {      //right
+                    ghostCollisions.push("right");
                 }
             });
-        }); 
-    }
 
-    function arrayEquals(array1, array2) {
-        return array1.toString() == array2.toString();
+            if (enableDebug)
+                console.log("Ghost collisions: " + ghostCollisions);
+
+            if (ghostCollisions.length > ghost.pastCollisions.length) {
+                ghost.pastCollisions = ghostCollisions;
+
+                if (enableDebug)
+                    console.log("Ghost past collisions: " + ghost.pastCollisions);
+            }
+
+            if (!(ghostCollisions.toString() == ghost.pastCollisions.toString())) {
+                console.log("Past: " + ghost.pastCollisions)
+                console.log("Current: " + ghostCollisions)
+                console.log(1)
+
+                if (ghost.speedX > 0)
+                    ghost.pastCollisions.push("right");
+                if (ghost.speedX < 0)
+                    ghost.pastCollisions.push("left");
+                if (ghost.speedY < 0)
+                    ghost.pastCollisions.push("up");
+                if (ghost.speedY > 0)
+                    ghost.pastCollisions.push("down");
+
+                const possiblePaths = ghost.pastCollisions.filter(
+                    collision => {
+                        return !ghostCollisions.includes(collision);
+                    }
+                );
+
+                const randomDirection = possiblePaths[Math.floor(Math.random() * possiblePaths.length)];
+                switch(randomDirection) {
+                    case "up":
+                        ghost.speedX = 0;
+                        ghost.speedY = -ghostSpeed;
+                        break;
+                    case "down":
+                        ghost.speedX = 0;
+                        ghost.speedY = ghostSpeed;
+                        break;
+                    case "left":
+                        ghost.speedY = 0;
+                        ghost.speedX = -ghostSpeed;
+                        break;
+                    case "right":
+                        ghost.speedY = 0;
+                        ghost.speedX = ghostSpeed;
+                        break;
+                }
+
+                ghost.pastCollisions = [];
+
+                console.log(possiblePaths);
+                console.log(2);
+            }
+        });
     }
 
     //GAME
@@ -551,10 +596,11 @@ $(document).ready(() => {
     createPelletsArray();
     createBordersArray();
     createGhostsArray();
+    ghostMovement();
+    drawGhost();
     createPacman();
     gameLoop();
     drawPellets();
-    drawGhost();
     pacmanGetDirection();
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
