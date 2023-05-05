@@ -9,3 +9,4 @@ Testo sullo schermo all'inizio del gioco(Clicca una tasta per iniziare)
 Suono
 Commenti
 Rotazione del pacman
+Un'animazione all'inizio di caricamento della pagina con il gioco
