@@ -1,0 +1,10 @@
+Le frecce cliccabile
+Immagini invece di cerchi
+Power up
+Timer prima di partire il gioco dopo collisione con un fantasma(3.. 2.. 1.. go!)
+Piu' ✨style✨(testo, decorazioni, colore delle frecce)
+Immagini che mostrano quante vite rimastono
+Sfondo meglio
+Testo sullo schermo all'inizio del gioco(Clicca una tasta per iniziare)
+Suono
+Commenti
