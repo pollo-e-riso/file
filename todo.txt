@@ -8,3 +8,4 @@ Sfondo meglio
 Testo sullo schermo all'inizio del gioco(Clicca una tasta per iniziare)
 Suono
 Commenti
+Rotazione del pacman
