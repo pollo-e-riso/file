@@ -19,7 +19,7 @@ $(document).ready(() => {
     const pacmanSpeed = 3;
 
     //La velocita' dei fantasmi
-    const ghostSpeed = pacmanSpeed - pacmanSpeed * 0.2;
+    const ghostSpeed = pacmanSpeed - 1;
 
     //Il raggio del pacman
     const pacmanRadius = 18;
@@ -41,7 +41,7 @@ $(document).ready(() => {
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
-    const enableDebug = true;
+    const enableDebug = false;
 
     //Impostazione della grandezza e altezza del tag canvas
     canvas.width = borderAmountHorizontal * borderSize - 240;
@@ -49,6 +49,8 @@ $(document).ready(() => {
 
     //Punteggio del giocatore
     let score = 0;
+
+    let pacmanLives = 3;
 
     //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
     $("#score").text(score);
@@ -92,12 +94,12 @@ $(document).ready(() => {
         [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-        [2, 2, 2, 2, 2, 2, 2, 2, 1, 3, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 2, 2, 2, 1, 2, 2, 2, 1, 3, 0, 4, 1, 2, 2, 2, 1, 2, 2, 2, 1],
+        [1, 1, 1, 1, 1, 2, 1, 2, 1, 5, 0, 6, 1, 2, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
         [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
         [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
         [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
@@ -381,7 +383,7 @@ $(document).ready(() => {
         //chiamata della funzione che controlla le collisioni
         collisionDetection();
     }
-   
+
     //La funzione che controlla le collisioni scorrendo l'array con gli hitbox dei bordi
     function collisionDetection() {
         borders.forEach((border) => {
@@ -401,10 +403,10 @@ $(document).ready(() => {
     //e la velocità in direzione appropriato e poi controlla se valore ottenuto è maggiore/minore
     //di quello del bordo 
     function isColliding(entity, border) {
-        return (entity.y + entity.radius + entity.speedY >= border.y &&                 //down
-            entity.y - entity.radius + entity.speedY <= border.y + border.height && //up
-            entity.x + entity.radius + entity.speedX >= border.x &&                 //right
-            entity.x - entity.radius + entity.speedX <= border.x + border.width)    //left
+        return (entity.y + entity.radius + entity.speedY >= border.y &&                       //down
+                entity.y - entity.radius + entity.speedY <= border.y + border.height &&       //up
+                entity.x + entity.radius + entity.speedX >= border.x &&                       //right
+                entity.x - entity.radius + entity.speedX <= border.x + border.width)           //left
     }
     //PELLET
     class Pellet {
@@ -465,8 +467,8 @@ $(document).ready(() => {
         }
     }
 
-    function isCollidingCircle(entity1, entity2){
-        return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);   
+    function isCollidingCircle(entity1, entity2) {
+        return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);
     }
 
     //GHOSTS
@@ -502,7 +504,16 @@ $(document).ready(() => {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
                 if (map[i][j] == 3) {
-                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, ghostSpeed, 0, "red"));
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, -ghostSpeed, 0, "red"));
+                }
+                if (map[i][j] == 4) {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, ghostSpeed, 0, "pink"));
+                }
+                if (map[i][j] == 5) {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, ghostSpeed, "cyan"));
+                }
+                if (map[i][j] == 6) {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, -ghostSpeed, "green"));
                 }
             }
         }
@@ -514,55 +525,130 @@ $(document).ready(() => {
         });
     }
 
-    function ghostMovement(){
-        const ghostCollisions = [];
-
+    function ghostMovement() {
         ghosts.forEach((ghost) => {
+            const ghostCollisions = [];
             borders.forEach((border) => {
-                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))){     //up
+                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))) {     //up
                     ghostCollisions.push("up");
-                }  
-                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)){      //down
-                    ghostCollisions.push("down");
-                }   
-                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)){     //left
-                    ghostCollisions.push("left");
-                } 
-                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)){      //right
-                    ghostCollisions.push("right");
-                }  
-
-                if(ghostCollisions.length > ghost.pastCollisions.length){
-                    ghost.pastCollisions = ghostCollisions;
                 }
-
-                if(!arrayEquals(ghostCollisions, ghost.pastCollisions)){
+                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)) {      //down
+                    ghostCollisions.push("down");
+                }
+                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)) {     //left
+                    ghostCollisions.push("left");
+                }
+                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)) {      //right
+                    ghostCollisions.push("right");
                 }
             });
-        }); 
+
+            if (ghostCollisions.length > ghost.pastCollisions.length) {
+                ghost.pastCollisions = ghostCollisions;
+            }
+
+            if (!(ghostCollisions.toString() == ghost.pastCollisions.toString())) {
+                if (ghost.speedX > 0)
+                    ghost.pastCollisions.push("right");
+                if (ghost.speedX < 0)
+                    ghost.pastCollisions.push("left");
+                if (ghost.speedY < 0)
+                    ghost.pastCollisions.push("up");
+                if (ghost.speedY > 0)
+                    ghost.pastCollisions.push("down");
+
+                const possiblePaths = ghost.pastCollisions.filter(
+                    collision => {
+                        return !ghostCollisions.includes(collision);
+                    }
+                );
+
+
+                const randomDirection = possiblePaths[Math.floor(Math.random() * possiblePaths.length)];
+                switch(randomDirection) {
+                    case "up":
+                        ghost.speedX = 0;
+                        ghost.speedY = -ghostSpeed;
+                        break;
+                    case "down":
+                        ghost.speedX = 0;
+                        ghost.speedY = ghostSpeed;
+                        break;
+                    case "left":
+                        ghost.speedY = 0;
+                        ghost.speedX = -ghostSpeed;
+                        break;
+                    case "right":
+                        ghost.speedY = 0;
+                        ghost.speedX = ghostSpeed;
+                        break;
+                }
+
+                ghost.pastCollisions = [];
+            }
+            //console.log("Present:" + ghostCollisions)
+            //console.log("Past:" + ghost.pastCollisions)
+            //console.log("Possible:" + possiblePaths)
+            //console.log(1)
+        });
     }
 
-    function arrayEquals(array1, array2) {
-        return array1.toString() == array2.toString();
+    function ghostsCollision(){
+        ghosts.forEach((ghost) => {
+            if(isCollidingCircle(ghost, pacman)){
+                resetGame();
+            }
+        });      
     }
 
     //GAME
+    function startOnAction(){
+        let executed = false;
+        
+        cancelAnimationFrame(frameID);
+
+        $(document).keydown(() =>{
+            if(executed)
+                return
+            frameID = requestAnimationFrame(gameLoop); 
+            executed = true
+        });
+        
+        $(document).click(() =>{
+            if(executed)
+                return
+            frameID = requestAnimationFrame(gameLoop); 
+            executed = true
+        });
+        return executed;
+    }
+
+    function resetGame(){
+        startOnAction();
+        //pacman.x = pacmanStartPosition;
+        //pacman.y = pacmanStartPosition;
+        //createPelletsArray();
+    }
+
     drawBorders();
     createPelletsArray();
     createBordersArray();
     createGhostsArray();
-    createPacman();
-    gameLoop();
     drawPellets();
     drawGhost();
+    ghostMovement();
+    createPacman();
+    gameLoop();
     pacmanGetDirection();
+    startOnAction();
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop() {
-        requestAnimationFrame(gameLoop);                            //richiama la funzione gameLoop 60 volte al secondo
+        frameID = requestAnimationFrame(gameLoop);                  //richiama la funzione gameLoop 60 volte al secondo
         canvasContext.clearRect(0, 0, canvas.width, canvas.height); //pulisce il canvas ogni frame per evitare che pacman lasci una traccia
         pacmanSetSpeed();
         pelletsCollision();
+        ghostsCollision();
         pacman.move();
         drawPellets();
         drawBorders();
