@@ -86,7 +86,7 @@ $(document).ready(() => {
     //1 = confine
     const map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 9, 1],
         [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
         [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
         [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -104,9 +104,9 @@ $(document).ready(() => {
         [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
         [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
         [1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1],
-        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
+        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 9, 2, 1],
         [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
 
@@ -409,11 +409,12 @@ $(document).ready(() => {
                 entity.x - entity.radius + entity.speedX <= border.x + border.width)           //left
     }
     //PELLET
-    class Pellet {
-        constructor(x, y) {
+    
+      class Pellet {
+        constructor(x, y, radius) {
             this.x = x;
             this.y = y;
-            this.radius = pacmanRadius / 3.8;
+            this.radius = radius;
         }
 
         //il metodo per disegnare un cerchio
@@ -432,7 +433,10 @@ $(document).ready(() => {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
                 if (map[i][j] == 2) {
-                    pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2));
+                    pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 3.8));
+                }
+                if (map[i][j] == 9) {
+                    pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 1.8));
                 }
             }
         }
