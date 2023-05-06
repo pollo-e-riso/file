@@ -480,7 +480,7 @@ $(document).ready(() => {
     }
     /*funzione mangio palline grosse*/
     function bigPelletsCollision() {
-        
+
     }
     //GHOSTS
     class Ghost {
@@ -616,11 +616,13 @@ $(document).ready(() => {
     function startOnAction(){
         let executed = false;
         
-        cancelAnimationFrame(frameID);
+        cancelAnimationFrame(frameID);//ferma il gioco
 
         $(document).keydown(() =>{
             if(executed)
                 return
+                
+            $(".start").html("");
             frameID = requestAnimationFrame(gameLoop); 
             executed = true
         });
@@ -628,6 +630,8 @@ $(document).ready(() => {
         $(document).click(() =>{
             if(executed)
                 return
+
+            $(".start").html("");
             frameID = requestAnimationFrame(gameLoop); 
             executed = true
         });
