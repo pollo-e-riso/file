@@ -436,7 +436,7 @@ $(document).ready(() => {
                     pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 3.8));
                 }
                 if (map[i][j] == 9) {
-                    pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 1.8));
+                    pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 1.5));
                 }
             }
         }
@@ -461,6 +461,10 @@ $(document).ready(() => {
                 }
 
                 pellets.splice(i, 1);//cancella la pallina corrente dall'array
+                if(pellet.radius == pacmanRadius / 1.5) {
+                    
+
+                }
                 score += 10;
                 if (score > sessionStorage.getItem("highScore")) {//getItem mostra il valore
                     sessionStorage.setItem("highScore", score);//setItem permette di cambiarlo
@@ -474,7 +478,10 @@ $(document).ready(() => {
     function isCollidingCircle(entity1, entity2) {
         return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);
     }
-
+    /*funzione mangio palline grosse*/
+    function bigPelletsCollision() {
+        
+    }
     //GHOSTS
     class Ghost {
         constructor(x, y, speedX, speedY, color) {
