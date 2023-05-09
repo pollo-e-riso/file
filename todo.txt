@@ -10,3 +10,4 @@ Suono
 Commenti
 Rotazione del pacman
 Un'animazione all'inizio di caricamento della pagina con il gioco
+Aggiungere una animazione al testo che mostra le vite rimaste se è l'utima vita(flashing animation)

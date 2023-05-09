@@ -79,3 +79,68 @@ canvas {
 
   
 }
+
+#p1{
+  bottom: 78%;
+}
+#p2{
+  bottom: 56%;
+}
+#p3{
+  bottom: 38%;
+}
+#p4{
+  bottom: 16%;
+}
+#p5{
+  bottom: -3%;
+}
+
+.rettangolo {
+    z-index: 90;
+    position: absolute;
+    width: 4%;
+    background-color: black;
+    height: 20%;
+    left:-20%;
+}
+.rettangoloD {
+  z-index: 90;
+  position: absolute;
+  width: 4%;
+  background-color: black;
+  height: 20%;
+  right:-20%;
+}
+
+#r1 {
+    top: 0;
+}
+#r2 {
+    top: 20%;
+}
+#r3 {
+    top: 40%;
+}
+#r4{
+    top: 60%;
+}
+#r5{
+  top: 80%;
+}
+
+.pacmanD {
+  position: absolute;
+  z-index: 100;
+
+  height: 26%;
+  left: 108%;
+}
+
+.pacman {
+  position: absolute;
+  z-index: 100;
+  transform: rotate(180deg);
+  height: 26%;
+  right:108%;
+}

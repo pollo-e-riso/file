@@ -95,9 +95,9 @@ $(document).ready(() => {
         [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
         [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-        [1, 2, 2, 2, 1, 2, 2, 2, 1, 3, 0, 4, 1, 2, 2, 2, 1, 2, 2, 2, 1],
-        [1, 1, 1, 1, 1, 2, 1, 2, 1, 5, 0, 6, 1, 2, 1, 2, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 2, 2, 2, 1, 3, 0, 4, 1, 2, 2, 2, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 2, 1, 2, 1, 5, 0, 6, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
         [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
@@ -626,6 +626,18 @@ $(document).ready(() => {
     //GAME
     function startOnAction(isOnPageLoad){  
         cancelAnimationFrame(frameID);//ferma il gioco
+
+        if(lives - 1 == 0){
+            animationPagePacman();
+
+            $(".rettangolo").animate({"width": "-=150%"}, 2000);
+            $(".rettangoloD").animate({"width": "-=150%"}, 2000);
+
+            resetGame();
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+
         $(".start").html("PRESS ANY BUTTON TO BEGIN PLAYING");
 
         $(document).one("keydown", () => {
@@ -646,7 +658,6 @@ $(document).ready(() => {
     function resetGame(){
         lives--;
         if(lives == 0){
-            console.log("Game Over");
             lives = 3;
             score = 0;
         }
@@ -660,6 +671,14 @@ $(document).ready(() => {
         pellets = [];
         createPelletsArray();
         ghostPlayerCollision = false;
+    }
+
+    function animationPagePacman(){
+        $(".pacman").animate({"left": "+=150%"}, 3000);
+        $(".rettangolo").animate({"width": "+=150%"}, 3000);
+    
+        $(".pacmanD").animate({"left": "-=150%"}, 3000);
+        $(".rettangoloD").animate({"width": "+=150%"}, 3000);
     }
     
     drawBorders();
