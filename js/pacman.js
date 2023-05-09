@@ -31,10 +31,10 @@ $(document).ready(() => {
     const borders = [];
 
     //Array con le palline
-    const pellets = [];
+    let pellets = [];
 
     //Array con i fantasmi
-    const ghosts = [];
+    let ghosts = [];
 
     //La grandezza dello spazio tra i bordi
     const borderSpaceWidth = borderSize / 1.3;  //secondo valore deve essere piu' di 1
@@ -50,7 +50,8 @@ $(document).ready(() => {
     //Punteggio del giocatore
     let score = 0;
 
-    let pacmanLives = 3;
+    let lives = 3;
+    $("#lives").text(lives);
 
     //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
     $("#score").text(score);
@@ -604,47 +605,63 @@ $(document).ready(() => {
         });
     }
 
+    let ghostPlayerCollision = false;
+
     function ghostsCollision(){
-        ghosts.forEach((ghost) => {
+
+        if(ghostPlayerCollision)
+            return;
+
+        for(let i = 0; i < ghosts.length; i++){
+            const ghost = ghosts[i];
             if(isCollidingCircle(ghost, pacman)){
-                resetGame();
+                startOnAction(false);
+                console.log("Collision")
+                ghostPlayerCollision = true;
+                break;
             }
-        });      
+        }     
     }
 
     //GAME
-    function startOnAction(){
-        let executed = false;
-        
+    function startOnAction(isOnPageLoad){  
         cancelAnimationFrame(frameID);//ferma il gioco
+        $(".start").html("PRESS ANY BUTTON TO BEGIN PLAYING");
 
-        $(document).keydown(() =>{
-            if(executed)
-                return
-                
+        $(document).one("keydown", () => {
             $(".start").html("");
-            frameID = requestAnimationFrame(gameLoop); 
-            executed = true
+            requestAnimationFrame(gameLoop);
+            if(!isOnPageLoad)
+                resetGame();
         });
-        
-        $(document).click(() =>{
-            if(executed)
-                return
 
+        $(document).one("click", () => {
             $(".start").html("");
-            frameID = requestAnimationFrame(gameLoop); 
-            executed = true
+            requestAnimationFrame(gameLoop);
+            if(!isOnPageLoad)
+                resetGame();
         });
-        return executed;
     }
 
     function resetGame(){
-        startOnAction();
-        //pacman.x = pacmanStartPosition;
-        //pacman.y = pacmanStartPosition;
-        //createPelletsArray();
+        lives--;
+        if(lives == 0){
+            console.log("Game Over");
+            lives = 3;
+            score = 0;
+        }
+        $("#lives").text(lives);
+        pacman.x = pacmanStartPosition;
+        pacman.y = pacmanStartPosition;
+        pacman.speedX = 0;
+        pacman.speedY = 0;
+        ghosts = [];
+        createGhostsArray();
+        pellets = [];
+        createPelletsArray();
+        ghostPlayerCollision = false;
     }
-
+    
     drawBorders();
     createPelletsArray();
     createBordersArray();
@@ -655,7 +672,7 @@ $(document).ready(() => {
     createPacman();
     gameLoop();
     pacmanGetDirection();
-    startOnAction();
+    startOnAction(true);
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop() {

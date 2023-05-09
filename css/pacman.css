@@ -53,7 +53,7 @@ canvas {
   left: 5px;
 }
 
-#scoreText, #highScoreText {
+#scoreText, #highScoreText, #livesText {
   color: white;  
 }
 
@@ -68,7 +68,7 @@ canvas {
   transition: color 1s;
 }
 
-@-webkit-keyframes glow {
+@keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px orange, 0 0 40px orange, 0 0 50px orange, 0 0 60px orange, 0 0 70px orange;
   }
