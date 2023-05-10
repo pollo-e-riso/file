@@ -680,11 +680,14 @@ $(document).ready(() => {
         setTimeout(function() {
             $(".gameover").html("");
             $(".rettangolo").animate({"width": "-=150%"}, 2000);
+
             $(".rettangoloD").animate({"width": "-=150%"}, 2000);
 
         }, 4500);
 
         setTimeout(function() {
+            $(".pacman").css("left", "-=150%");
+            $(".pacmanD").css("left", "+=150%");
             requestAnimationFrame(gameLoop);
             resetGame();
 
