@@ -624,18 +624,15 @@ $(document).ready(() => {
     function startOnAction(isOnPageLoad){  
         cancelAnimationFrame(frameID);//ferma il gioco
 
-              $(document).on('keydown.disableKeys', function(e) {//blocca i tasti freccia
-                if (e.keyCode >= 37 && e.keyCode <= 40) {
-                  e.preventDefault();
-                }
-              });
-          
-
         if(lives - 1 == 0){
-            requestAnimationFrame(gameLoop);
-            animationPagePacman();
+            $("#livestext").removeClass("last-lives");
 
+            animationPagePacman();
             return;
+        }
+
+        if(lives - 1  == 2){
+            $("#livestext").addClass("last-lives");
         }
 
         $(".start").html("PRESS ANY BUTTON TO BEGIN PLAYING");
@@ -680,8 +677,6 @@ $(document).ready(() => {
     }
 
     function animationPagePacman(){
-        pacman.speedX = 0;
-        pacman.speedY = 0;
         $(".gameover").html("GAME OVER");
 
         setTimeout(function() {
@@ -701,6 +696,7 @@ $(document).ready(() => {
         }, 4500);
 
         setTimeout(function() {
+            requestAnimationFrame(gameLoop);
             resetGame();
 
         }, 5000);
