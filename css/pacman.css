@@ -4,6 +4,12 @@ body {
   overflow: hidden;
 }
 
+@font-face {
+  font-family: 'CrackMan';
+  src: url('../fonts/CrackMan.woff') format('woff'),
+       url('../fonts/CrackMan.TTF') format('truetype');
+}
+
 canvas {
   position: absolute;
   top: 50%;
@@ -79,6 +85,29 @@ canvas {
 
   
 }
+
+.gameover{
+  font-size: 75px;
+  font-family: 'CrackMan';
+  color: rgb(201, 26, 26);
+  position: absolute;
+  top: 44%;
+  left: 34%;
+  animation: glowend 1s ease-in-out infinite alternate;
+}
+
+@keyframes glowend {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px red, 0 0 40px red, 0 0 50px red, 0 0 60px red, 0 0 70px red, 0 0 80px red, 0 0 90px red;
+  }
+
+  to {
+    text-shadow: 0 0 10px #fff, 0 0 20px rgb(255, 99, 99), 0 0 30px rgb(255, 65, 65), 0 0 40px rgb(255, 65, 65), 0 0 50px rgb(255, 65, 65), 0 0 60px rgb(255, 65, 65), 0 0 70px rgb(255, 65, 65), 0 0 80px rgb(255, 65, 65);
+  }
+
+
+}
+
 
 #p1{
   bottom: 78%;

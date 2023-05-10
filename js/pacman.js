@@ -604,11 +604,8 @@ $(document).ready(() => {
             //console.log(1)
         });
     }
-
     let ghostPlayerCollision = false;
-
     function ghostsCollision(){
-
         if(ghostPlayerCollision)
             return;
 
@@ -627,14 +624,17 @@ $(document).ready(() => {
     function startOnAction(isOnPageLoad){  
         cancelAnimationFrame(frameID);//ferma il gioco
 
+              $(document).on('keydown.disableKeys', function(e) {//blocca i tasti freccia
+                if (e.keyCode >= 37 && e.keyCode <= 40) {
+                  e.preventDefault();
+                }
+              });
+          
+
         if(lives - 1 == 0){
+            requestAnimationFrame(gameLoop);
             animationPagePacman();
 
-            $(".rettangolo").animate({"width": "-=150%"}, 2000);
-            $(".rettangoloD").animate({"width": "-=150%"}, 2000);
-
-            resetGame();
-            requestAnimationFrame(gameLoop);
             return;
         }
 
@@ -657,9 +657,12 @@ $(document).ready(() => {
 
     function resetGame(){
         lives--;
+        var o = 0;
         if(lives == 0){
             lives = 3;
             score = 0;
+            $("#score").text(score);
+            o = 1;
         }
         $("#lives").text(lives);
         pacman.x = pacmanStartPosition;
@@ -668,17 +671,39 @@ $(document).ready(() => {
         pacman.speedY = 0;
         ghosts = [];
         createGhostsArray();
-        pellets = [];
-        createPelletsArray();
+            if(o == 1){
+            pellets = [];
+            createPelletsArray();
+            o = 0;
+            }
         ghostPlayerCollision = false;
     }
 
     function animationPagePacman(){
+        pacman.speedX = 0;
+        pacman.speedY = 0;
+        $(".gameover").html("GAME OVER");
+
+        setTimeout(function() {
         $(".pacman").animate({"left": "+=150%"}, 3000);
         $(".rettangolo").animate({"width": "+=150%"}, 3000);
     
         $(".pacmanD").animate({"left": "-=150%"}, 3000);
         $(".rettangoloD").animate({"width": "+=150%"}, 3000);
+
+        }, 1500);
+
+        setTimeout(function() {
+            $(".gameover").html("");
+            $(".rettangolo").animate({"width": "-=150%"}, 2000);
+            $(".rettangoloD").animate({"width": "-=150%"}, 2000);
+
+        }, 4500);
+
+        setTimeout(function() {
+            resetGame();
+
+        }, 5000);
     }
     
     drawBorders();
