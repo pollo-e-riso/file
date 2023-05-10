@@ -642,24 +642,18 @@ $(document).ready(() => {
             requestAnimationFrame(gameLoop);
             if(!isOnPageLoad)
                 resetGame();
-        });
-
-        $(document).one("click", () => {
-            $(".start").html("");
-            requestAnimationFrame(gameLoop);
-            if(!isOnPageLoad)
-                resetGame();
+            return;
         });
     }
 
     function resetGame(){
         lives--;
-        var o = 0;
         if(lives == 0){
             lives = 3;
             score = 0;
             $("#score").text(score);
-            o = 1;
+            pellets = [];
+            createPelletsArray();
         }
         $("#lives").text(lives);
         pacman.x = pacmanStartPosition;
@@ -668,11 +662,6 @@ $(document).ready(() => {
         pacman.speedY = 0;
         ghosts = [];
         createGhostsArray();
-            if(o == 1){
-            pellets = [];
-            createPelletsArray();
-            o = 0;
-            }
         ghostPlayerCollision = false;
     }
 
