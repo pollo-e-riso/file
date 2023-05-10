@@ -61,6 +61,7 @@ canvas {
 
 #scoreText, #highScoreText, #livesText {
   color: white;  
+  user-select: none;
 }
 
 .start{

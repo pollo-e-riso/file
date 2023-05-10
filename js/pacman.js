@@ -56,11 +56,11 @@ $(document).ready(() => {
     //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
     $("#score").text(score);
 
-    if (sessionStorage.getItem("highScore") == null) {// controlla se l'oggetto "highScore" esiste già nell'archivio sessionStorage. Se non esiste, viene creato con un valore iniziale di 0.
-        sessionStorage.setItem("highScore", 0);
+    if (localStorage.getItem("highScore") == null) {// controlla se l'oggetto "highScore" esiste già nell'archivio localStorage. Se non esiste, viene creato con un valore iniziale di 0.
+        localStorage.setItem("highScore", 0);
     }
 
-    $("#highScore").text(sessionStorage.getItem("highScore"));
+    $("#highScore").text(localStorage.getItem("highScore"));
 
     //Un oggetto che contiene tutti le possibili direzioni
     const directions = {
@@ -85,29 +85,35 @@ $(document).ready(() => {
     //Dimensioni totali: 27 * 30
     //0 = spazio vuoto
     //1 = confine
+    //2 = pallina
+    //3 = fantasma
+    //4 = fantasma
+    //5 = fantasma
+    //6 = fantasma
+    //9 = pallina grande
     const map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 9, 1],
-        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-        [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
-        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
-        [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 2, 2, 2, 1, 3, 0, 4, 1, 2, 2, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 2, 1, 2, 1, 5, 0, 6, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-        [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-        [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-        [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-        [1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 1],
-        [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 9, 2, 1],
-        [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-        [1, 9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+        [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 2, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 4, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 1, 0, 1, 5, 0, 6, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]
 
@@ -462,14 +468,28 @@ $(document).ready(() => {
                 }
 
                 pellets.splice(i, 1);//cancella la pallina corrente dall'array
+                
+                //vinto
+                if(pellets.length == 0){
+                    resetGame(false);
+                }
+
                 if(pellet.radius == pacmanRadius / 1.5) {
-                    
+                    ghosts.forEach((ghost) => {
+                        ghost.isScared = true;
+                        ghostMovement();
+                        console.log(ghost.isScared)
+                        setTimeout(() => {
+                            ghost.isScared = false;
+                        }
+                        , 10000);
+                    });     
 
                 }
                 score += 10;
-                if (score > sessionStorage.getItem("highScore")) {//getItem mostra il valore
-                    sessionStorage.setItem("highScore", score);//setItem permette di cambiarlo
-                    $("#highScore").text(sessionStorage.getItem("highScore"));
+                if (score > localStorage.getItem("highScore")) {//getItem mostra il valore
+                    localStorage.setItem("highScore", score);//setItem permette di cambiarlo
+                    $("#highScore").text(localStorage.getItem("highScore"));
                 }
                 $("#score").text(score);
             }
@@ -493,13 +513,17 @@ $(document).ready(() => {
             this.radius = pacmanRadius;
             this.color = color;
             this.pastCollisions = [];
+            this.isScared = false;
         }
 
         //il metodo per disegnare un cerchio
         draw() {
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            canvasContext.fillStyle = this.color;
+            if(!this.isScared)
+                canvasContext.fillStyle = this.color;
+            else
+                canvasContext.fillStyle = "purple";
             canvasContext.fill();
             canvasContext.closePath();
         }
@@ -525,6 +549,25 @@ $(document).ready(() => {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, ghostSpeed, "cyan"));
                 }
                 if (map[i][j] == 6) {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, -ghostSpeed, "green"));
+                }
+            }
+        }
+    }
+
+    function createGhostsArrayColor(color) {
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if (map[i][j] == 3 && color == "red") {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, -ghostSpeed, 0, "red"));
+                }
+                if (map[i][j] == 4 && color == "pink") {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, ghostSpeed, 0, "pink"));
+                }
+                if (map[i][j] == 5 && color == "cyan") {
+                    ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, ghostSpeed, "cyan"));
+                }
+                if (map[i][j] == 6 && color == "green") {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, -ghostSpeed, "green"));
                 }
             }
@@ -604,17 +647,27 @@ $(document).ready(() => {
             //console.log(1)
         });
     }
+
     let ghostPlayerCollision = false;
+
     function ghostsCollision(){
         if(ghostPlayerCollision)
             return;
 
         for(let i = 0; i < ghosts.length; i++){
             const ghost = ghosts[i];
-            if(isCollidingCircle(ghost, pacman)){
+            if(isCollidingCircle(ghost, pacman) && !ghost.isScared){
                 startOnAction(false);
-                console.log("Collision")
                 ghostPlayerCollision = true;
+                break;
+            }
+            if(isCollidingCircle(ghost, pacman) && ghost.isScared){
+                let deadGhostColor = ghost.color;
+                ghosts.splice(i, 1);
+                score += 100;
+                setTimeout(() => {
+                    createGhostsArrayColor(deadGhostColor);
+                }, 5000);
                 break;
             }
         }     
@@ -641,13 +694,17 @@ $(document).ready(() => {
             $(".start").html("");
             requestAnimationFrame(gameLoop);
             if(!isOnPageLoad)
-                resetGame();
+                resetGame(true);
             return;
         });
     }
 
-    function resetGame(){
-        lives--;
+    function resetGame(changeLives){
+        if(changeLives)
+            lives--;
+        if(!changeLives){
+            createPelletsArray(); 
+        }
         if(lives == 0){
             lives = 3;
             score = 0;
@@ -689,7 +746,7 @@ $(document).ready(() => {
             $(".pacman").css("left", "-=150%");
             $(".pacmanD").css("left", "+=150%");
             requestAnimationFrame(gameLoop);
-            resetGame();
+            resetGame(true);
 
         }, 5000);
     }
