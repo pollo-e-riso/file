@@ -15,13 +15,13 @@ canvas {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 700px;
-  height: 700px;
+  width: 100vh;
+  height: 100vh;
   background-color: black;
 }
 
 .arrow-button {
-  background-color: white;
+  background-color: transparent;
   display: flex;
   width: 50px;
   height: 50px;
@@ -64,15 +64,19 @@ canvas {
   user-select: none;
 }
 
-.start{
+.text{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   font-size: 55px;
   font-family: cursive, monospace;
   color: white;
-  position: absolute;
-  top: 44%;
-  left: 16%;
   animation: glow 1s ease-in-out infinite alternate;
   transition: color 1s;
+  text-align: center;
+  user-select: none;
 }
 
 @keyframes glow {
@@ -82,10 +86,9 @@ canvas {
 
   to {
     color: transparent;
-  }
-
-  
+  } 
 }
+
 
 .gameover{
   font-size: 75px;
@@ -110,19 +113,20 @@ canvas {
 }
 /*ultima vita*/
 .last-lives{
-  animation: last 1s ease-in-out infinite alternate;
+  animation: color-change 1s infinite;
 }
 
-@keyframes last {
-  from {
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+@keyframes color-change {
+  0% {
+    color: white;
   }
-  
-  to {
-    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  50% {
+    color: red;
+  }
+  100% {
+    color: white;
   }
 }
-
 
 #p1{
   bottom: 78%;

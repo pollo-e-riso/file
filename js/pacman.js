@@ -21,6 +21,9 @@ $(document).ready(() => {
     //La velocita' dei fantasmi
     const ghostSpeed = pacmanSpeed - 1;
 
+    //const pacmanSpeed = window.screen.height / window.screen.width * 4;
+    //const ghostSpeed = pacmanSpeed - pacmanSpeed * 0.2;
+
     //Il raggio del pacman
     const pacmanRadius = 18;
 
@@ -472,6 +475,7 @@ $(document).ready(() => {
                 //vinto
                 if(pellets.length == 0){
                     resetGame(false);
+                    startOnAction(false, "YOU'VE COMPLETED THE LEVEL! KEEP IT UP!");
                 }
 
                 if(pellet.radius == pacmanRadius / 1.5) {
@@ -657,7 +661,7 @@ $(document).ready(() => {
         for(let i = 0; i < ghosts.length; i++){
             const ghost = ghosts[i];
             if(isCollidingCircle(ghost, pacman) && !ghost.isScared){
-                startOnAction(false);
+                startOnAction(false, "PRESS ANY BUTTON TO CONTINUE PLAYING");
                 ghostPlayerCollision = true;
                 break;
             }
@@ -666,7 +670,8 @@ $(document).ready(() => {
                 ghosts.splice(i, 1);
                 score += 100;
                 setTimeout(() => {
-                    createGhostsArrayColor(deadGhostColor);
+                    if(ghosts.length != 4)
+                        createGhostsArrayColor(deadGhostColor);
                 }, 5000);
                 break;
             }
@@ -674,27 +679,27 @@ $(document).ready(() => {
     }
 
     //GAME
-    function startOnAction(isOnPageLoad){  
+    function startOnAction(isOnPageLoad, textToDisplay){  
         cancelAnimationFrame(frameID);//ferma il gioco
 
         if(lives - 1 == 0){
-            $("#livestext").removeClass("last-lives");
+            //$("#livesText").addClass("last-lives");
+            //$("#livestext").removeClass("last-lives");
 
             animationPagePacman();
             return;
         }
 
-        if(lives - 1  == 2){
-            $("#livestext").addClass("last-lives");
-        }
-
-        $(".start").html("PRESS ANY BUTTON TO BEGIN PLAYING");
+        $(".text").html(textToDisplay);
 
         $(document).one("keydown", () => {
-            $(".start").html("");
+            $(".text").html("");
             requestAnimationFrame(gameLoop);
             if(!isOnPageLoad)
                 resetGame(true);
+            if(lives == 1){
+                $("#livesText").addClass("last-lives"); 
+            }
             return;
         });
     }
@@ -711,6 +716,7 @@ $(document).ready(() => {
             $("#score").text(score);
             pellets = [];
             createPelletsArray();
+            $("#livesText").removeClass("last-lives"); 
         }
         $("#lives").text(lives);
         pacman.x = pacmanStartPosition;
@@ -761,7 +767,7 @@ $(document).ready(() => {
     createPacman();
     gameLoop();
     pacmanGetDirection();
-    startOnAction(true);
+    startOnAction(true, "PRESS ANY BUTTON TO BEGIN PLAYING");
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop() {
