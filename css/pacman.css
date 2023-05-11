@@ -130,6 +130,12 @@ canvas {
 
 
 .next-level{
+  font-size: 75px;
+  font-family: 'CrackMan';
+  color: rgb(255, 255, 255);
+  position: absolute;
+  top: 44%;
+  left: 34%;
   animation: last 1s ease-in-out infinite alternate;
 }
 
