@@ -3,6 +3,10 @@ $(document).ready(() => {
     var audio = document.getElementById("myAudio");
     //musica mangio palline grosse
     var audio2 = document.getElementById("myAudio2");
+    //metal piper
+    var audio3 = document.getElementById("myAudio3");
+    //musica waka waka
+    var audio4 = document.getElementById("myAudio4");
 
     //Selezione del tag canvass
     const canvas = document.querySelector("canvas");
@@ -734,31 +738,35 @@ $(document).ready(() => {
 
     function animationPagePacman(){
         $(".gameover").html("GAME OVER");
-
+        audio3.play();
         setTimeout(function() {
+        audio3.pause();
+        audio4.play();
         $(".pacman").animate({"left": "+=150%"}, 3000);
         $(".rettangolo").animate({"width": "+=150%"}, 3000);
     
         $(".pacmanD").animate({"left": "-=150%"}, 3000);
         $(".rettangoloD").animate({"width": "+=150%"}, 3000);
 
-        }, 1500);
+        }, 2000);
 
         setTimeout(function() {
+            audio4.pause();
             $(".gameover").html("");
             $(".rettangolo").animate({"width": "-=150%"}, 2000);
 
             $(".rettangoloD").animate({"width": "-=150%"}, 2000);
 
-        }, 4500);
+        }, 5000);
 
         setTimeout(function() {
+            audio4.pause();
             $(".pacman").css("left", "-=150%");
             $(".pacmanD").css("left", "+=150%");
             requestAnimationFrame(gameLoop);
             resetGame(true);
 
-        }, 5000);
+        }, 5500);
     }
 
 
