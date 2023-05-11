@@ -1,4 +1,8 @@
 $(document).ready(() => {
+    //musica di sottofondo
+    var audio = document.getElementById("myAudio");
+    //musica mangio palline grosse
+    var audio2 = document.getElementById("myAudio2");
 
     //Selezione del tag canvass
     const canvas = document.querySelector("canvas");
@@ -478,6 +482,7 @@ $(document).ready(() => {
                 }
 
                 if(pellet.radius == pacmanRadius / 1.5) {
+                    audio2.play();
                     ghosts.forEach((ghost) => {
                         ghost.isScared = true;
                         ghostMovement();
