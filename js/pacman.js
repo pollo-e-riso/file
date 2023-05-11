@@ -474,8 +474,7 @@ $(document).ready(() => {
                 
                 //vinto
                 if(pellets.length == 0){
-                    resetGame(false);
-                    startOnAction(false, "YOU'VE COMPLETED THE LEVEL! KEEP IT UP!");
+                    nextlevel();
                 }
 
                 if(pellet.radius == pacmanRadius / 1.5) {
@@ -755,6 +754,44 @@ $(document).ready(() => {
             resetGame(true);
 
         }, 5000);
+    }
+
+
+    function nextlevel(){
+        cancelAnimationFrame(frameID);//ferma il gioco
+        $(".next-level").text("N");
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 400);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "X");
+            }, 800);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "T");
+            }, 1200);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + " ");
+            }, 1600);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "L");
+            }, 2000);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 2400);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "V");
+            }, 2800);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 3200);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "L");
+            }, 3600);
+        setTimeout(function() {
+            $(".next-level").html("");
+            requestAnimationFrame(gameLoop);
+            resetGame(false);
+            }, 4000);   
     }
     
     drawBorders();
