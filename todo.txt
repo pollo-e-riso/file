@@ -1,13 +1,13 @@
-Le frecce cliccabile
+
 Immagini invece di cerchi
 Power up✅
-Piu' ✨style✨(testo, decorazioni, colore delle frecce)
+Piu' ✨style✨(testo, decorazioni, colore delle frecce)✅
 Immagini che mostrano quante vite rimastono
-Sfondo meglio
+Sfondo meglio✅
 Testo sullo schermo all'inizio del gioco(Clicca una tasta per iniziare)✅
-Suono
-Commenti
+Suono✅
+Commenti✅
 Rotazione del pacman
 Un'animazione all'inizio di caricamento della pagina con il gioco✅
-Aggiungere una animazione al testo che mostra le vite rimaste se è l'utima vita(flashing animation)
-Qualcosa scritto quando il giocatore vince
+Aggiungere una animazione al testo che mostra le vite rimaste se è l'utima vita(flashing animation)✅
+Qualcosa scritto quando il giocatore vince✅
