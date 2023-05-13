@@ -1,16 +1,12 @@
 $(document).ready(() => {
-    //sottofondo
+    //musica di sottofondo
     var audio = document.getElementById("myAudio");
-
-    //quando si mangia una pallina grossa
+    //musica mangio palline grosse
     var audio2 = document.getElementById("myAudio2");
-
-    //metal pipe
+    //metal piper
     var audio3 = document.getElementById("myAudio3");
-
-    //waka waka
+    //musica waka waka
     var audio4 = document.getElementById("myAudio4");
-
     //musica pacman morto 3 volte
     var audio5 = document.getElementById("myAudio5");
 
@@ -35,26 +31,26 @@ $(document).ready(() => {
     //La velocita' dei fantasmi
     const ghostSpeed = pacmanSpeed - 1;
 
+    //const pacmanSpeed = window.screen.height / window.screen.width * 4;
+    //const ghostSpeed = pacmanSpeed - pacmanSpeed * 0.2;
+
     //Il raggio del pacman
     const pacmanRadius = 18;
 
     //La posizione iniziale del pacman
     const pacmanStartPosition = borderSize + borderSize / 2;
 
-    //Array con confini gia' creati(createBordersArray())
+    //Array con confini gia' creati(sara' riempito nel futuro tramite la funzione createBordersArray())
     const borders = [];
 
-    //Array con le palline(createPelletsArray())
+    //Array con le palline
     let pellets = [];
 
-    //Array con i fantasmi(createGhostsArray())
+    //Array con i fantasmi
     let ghosts = [];
 
-    //La grandezza dello spazio vuoto dentro un confine
-    //Secondo valore deve essere piu' di 1
-    const borderSpaceWidth = borderSize / 1.3;
-
-    //Constante per lo spostamento dello spazio vuoto dentro un confine
+    //La grandezza dello spazio tra i bordi
+    const borderSpaceWidth = borderSize / 1.3;  //secondo valore deve essere piu' di 1
     const borderOffset = (borderSize - borderSpaceWidth) / 2;
 
     //Boolean per accendere o spegnere la modalita' debug
@@ -67,23 +63,19 @@ $(document).ready(() => {
     //Punteggio del giocatore
     let score = 0;
 
-    //Vite del giocatore
     let lives = 3;
     $("#lives").text(lives);
 
     //Visualizzazione del punteggio corrente e del punteggio massimo all'inizio del gioco
     $("#score").text(score);
 
-    //Controlla se l'oggetto "highScore" esiste già nell'archivio localStorage
-    //Se non esiste, viene creato con un valore iniziale di 0
-    if (localStorage.getItem("highScore") == null) {
+    if (localStorage.getItem("highScore") == null) {// controlla se l'oggetto "highScore" esiste già nell'archivio localStorage. Se non esiste, viene creato con un valore iniziale di 0.
         localStorage.setItem("highScore", 0);
     }
 
-    //Visualizzazione del punteggio massimo
     $("#highScore").text(localStorage.getItem("highScore"));
 
-    //Un oggetto che contiene tutti le possibili direzioni e se sono premute o no
+    //Un oggetto che contiene tutti le possibili direzioni
     const directions = {
         up: {
             pressed: false
@@ -99,12 +91,8 @@ $(document).ready(() => {
         }
     }
 
-    //Una stringa che contiene l'ultima direzione dell pacman
-    let lastDirection = "";
-
-    //una variabile per controllare se il pacman ha colliso con un fantasma
-    //serve per evitare l'attivazione delle certe funzioni più di una volta
-    let ghostPlayerCollision = false;
+    //Una stringa che contiene la direzione attuale del pacman
+    var lastDirection = "";
 
     //La mappa del gioco
     //Dimensioni totali: 27 * 30
@@ -157,8 +145,7 @@ $(document).ready(() => {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
                 if (map[i][j] == 1) {
-                    //aggiunge un nuovo confine all'array con coordinate x e y
-                    borders.push(new Border(j * borderSize, i * borderSize));
+                    borders.push(new Border(j * borderSize, i * borderSize));   //aggiunge un nuovo confine all'array con coordinate x e y
                 }
             }
         }
@@ -170,7 +157,6 @@ $(document).ready(() => {
         canvasContext.fillRect(x, y, width, height);
     }
 
-    //La funzione per disegnare i confini
     function drawBorders() {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
@@ -266,7 +252,7 @@ $(document).ready(() => {
         pacman = new Pacman(pacmanStartPosition, pacmanStartPosition, 0, 0);
     }
 
-    //La funzione che controlla se un tasto è premuto e cambia la direzione del pacman
+    //La funzione che controlla l'ultima direzione premuta
     function pacmanGetDirection() {
         $(document).keydown((event) => {
             switch (event.key) {
@@ -348,8 +334,6 @@ $(document).ready(() => {
                 //passa un pacman con la velocità impostata a quella che avrebbe se premessimo il tasto
                 if (isColliding({ ...pacman, speedX: 0, speedY: -pacmanSpeed }, border)) {
                     //se ci sarà una collisione, la velocità di pacman viene impostata a 0
-                    //così da non farlo andare nella direzione del confine 
-                    //e non attivare la funzione di collisione che lo fermerebbe
                     pacman.speedY = 0;
 
                     if (enableDebug) {
@@ -358,8 +342,7 @@ $(document).ready(() => {
 
                     break;
                 } else {
-                    //se non ci sarà una collisione, la velocità di pacman
-                    //viene impostata a quella che avrebbe se premessimo il tasto
+                    //se non ci sarà una collisione, la velocità di pacman viene impostata a quella che avrebbe se premessimo il tasto
                     pacman.speedY = -pacmanSpeed;
                 }
             }
@@ -418,7 +401,6 @@ $(document).ready(() => {
         }
 
         //chiamata della funzione che controlla le collisioni
-        //così da fermare pacman se collide con un bordo
         collisionDetection();
     }
 
@@ -442,13 +424,13 @@ $(document).ready(() => {
     //di quello del bordo 
     function isColliding(entity, border) {
         return (entity.y + entity.radius + entity.speedY >= border.y &&                       //down
-            entity.y - entity.radius + entity.speedY <= border.y + border.height &&       //up
-            entity.x + entity.radius + entity.speedX >= border.x &&                       //right
-            entity.x - entity.radius + entity.speedX <= border.x + border.width)           //left
+                entity.y - entity.radius + entity.speedY <= border.y + border.height &&       //up
+                entity.x + entity.radius + entity.speedX >= border.x &&                       //right
+                entity.x - entity.radius + entity.speedX <= border.x + border.width)           //left
     }
     //PELLET
-
-    class Pellet {
+    
+      class Pellet {
         constructor(x, y, radius) {
             this.x = x;
             this.y = y;
@@ -470,11 +452,9 @@ $(document).ready(() => {
     function createPelletsArray() {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
-                //pallina normale
                 if (map[i][j] == 2) {
                     pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 3.8));
                 }
-                //pallina grossa
                 if (map[i][j] == 9) {
                     pellets.push(new Pellet(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, pacmanRadius / 1.5));
                 }
@@ -492,67 +472,51 @@ $(document).ready(() => {
     //La funzione che controlla se pacman collide con una pallina
     //Se sì, la pallina viene rimossa dall'array
     function pelletsCollision() {
-        //scorre l'array al contrario per evitare problemi con processo di disegnamento delle palline
-        for (let i = pellets.length - 1; i >= 0; i--) {
-            //una costante con la pallina corrente
+        for (let i = pellets.length - 1; i >= 0; i--) { //scorre l'array al contrario per evitare problemi con processo di disegnamento delle palline
             const pellet = pellets[i];
-
-            //controllo della collisione tra pacman e una pallina
+            //se la distanza tra il centro di pacman e il centro della pallina è minore della somma dei loro raggi
             if (isCollidingCircle(pellet, pacman)) {
                 if (enableDebug) {
                     console.log("pellet collision");
                 }
 
-                //cancella la pallina corrente dall'array
-                pellets.splice(i, 1);
-
-                //condizone per la vittoria
-                if (pellets.length == 0) {
+                pellets.splice(i, 1);//cancella la pallina corrente dall'array
+                
+                //vinto
+                if(pellets.length == 0){
                     nextlevel();
                 }
 
-                //collisione tra pacman e una pallina grossa
-                if (pellet.radius == pacmanRadius / 1.5) {
-
+                if(pellet.radius == pacmanRadius / 1.5) {
                     audio2.play();
-
-                    //cambia lo stato di tutti i fantasmi in "spaventato"
                     ghosts.forEach((ghost) => {
                         ghost.isScared = true;
-
-                        if (enableDebug)
-                            console.log(ghost.isScared)
-
-                        //dopo 10 secondi cambia lo stato di tutti i fantasmi in "non spaventato"
+                        ghostMovement();
+                        console.log(ghost.isScared)
                         setTimeout(() => {
                             ghost.isScared = false;
                         }
-                            , 10000);
-                    });
+                        , 10000);
+                    });     
 
                 }
-
                 score += 10;
-
-                //se il punteggio corrente è maggiore del punteggio più alto, il punteggio più alto viene aggiornato
-                if (score > localStorage.getItem("highScore")) {
-                    localStorage.setItem("highScore", score);
+                if (score > localStorage.getItem("highScore")) {//getItem mostra il valore
+                    localStorage.setItem("highScore", score);//setItem permette di cambiarlo
                     $("#highScore").text(localStorage.getItem("highScore"));
                 }
-
-                //aggiorna il testo con punteggio
                 $("#score").text(score);
             }
         }
     }
 
-    //La funzione che controlla conllisioni tra due cerchi
-    //se la distanza tra il centro di un cerchio e il centro di un altro è minore della somma dei loro raggi
-    //allora i cerchi si toccano
     function isCollidingCircle(entity1, entity2) {
         return (Math.hypot(entity1.x - entity2.x, entity1.y - entity2.y) < entity2.radius + entity1.radius);
     }
+    /*funzione mangio palline grosse*/
+    function bigPelletsCollision() {
 
+    }
     //GHOSTS
     class Ghost {
         constructor(x, y, speedX, speedY, color) {
@@ -562,7 +526,6 @@ $(document).ready(() => {
             this.speedY = speedY;
             this.radius = pacmanRadius;
             this.color = color;
-            //un array con le collisioni passate
             this.pastCollisions = [];
             this.isScared = false;
         }
@@ -571,7 +534,7 @@ $(document).ready(() => {
         draw() {
             canvasContext.beginPath();
             canvasContext.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            if (!this.isScared)
+            if(!this.isScared)
                 canvasContext.fillStyle = this.color;
             else
                 canvasContext.fillStyle = "purple";
@@ -579,7 +542,7 @@ $(document).ready(() => {
             canvasContext.closePath();
         }
 
-        //il metodo per aggiornare la posizione di un fantasma
+        //il metodo per aggiornare la posizione del pacman
         move() {
             this.draw();
             this.x += this.speedX;
@@ -587,23 +550,18 @@ $(document).ready(() => {
         }
     }
 
-    //La funzione le istanze dei fantasmi
     function createGhostsArray() {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
-                //rosso
                 if (map[i][j] == 3) {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, -ghostSpeed, 0, "red"));
                 }
-                //rosa
                 if (map[i][j] == 4) {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, ghostSpeed, 0, "pink"));
                 }
-                //ciano
                 if (map[i][j] == 5) {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, ghostSpeed, "cyan"));
                 }
-                //verde
                 if (map[i][j] == 6) {
                     ghosts.push(new Ghost(j * borderSize + borderSize / 2, i * borderSize + borderSize / 2, 0, -ghostSpeed, "green"));
                 }
@@ -611,7 +569,6 @@ $(document).ready(() => {
         }
     }
 
-    //La funzione che crea instaze dei fantasmi basandosi sui colori
     function createGhostsArrayColor(color) {
         for (let i = 0; i < map.length; i++) {
             for (let j = 0; j < map[0].length; j++) {
@@ -631,49 +588,34 @@ $(document).ready(() => {
         }
     }
 
-    //La funzione che disegna i fantasmi
     function drawGhost() {
         ghosts.forEach((ghost) => {
             ghost.move();
         });
     }
 
-    //Gestione dei movimenti dei fantasmi
     function ghostMovement() {
         ghosts.forEach((ghost) => {
-
-            //un array con le possibili collisioni di un fantasma in certo momento
             const ghostCollisions = [];
-
             borders.forEach((border) => {
-                //up
-                //se non è già presente una collisione in questa direzione in ghostCollisions 
-                //e se ci potrebbe essere una collisione in questa direzione
-                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))) {
+                if (!ghostCollisions.includes("up") && (isColliding({ ...ghost, speedX: 0, speedY: -ghostSpeed }, border))) {     //up
                     ghostCollisions.push("up");
                 }
-                //down
-                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)) {
+                if (!ghostCollisions.includes("down") && isColliding({ ...ghost, speedX: 0, speedY: ghostSpeed }, border)) {      //down
                     ghostCollisions.push("down");
                 }
-                //left
-                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)) {
+                if (!ghostCollisions.includes("left") && isColliding({ ...ghost, speedX: -ghostSpeed, speedY: 0 }, border)) {     //left
                     ghostCollisions.push("left");
                 }
-                //right
-                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)) {
+                if (!ghostCollisions.includes("right") && isColliding({ ...ghost, speedX: ghostSpeed, speedY: 0 }, border)) {      //right
                     ghostCollisions.push("right");
                 }
             });
 
-            //se il numero di collisioni correnti è maggiore del numero di collisioni passate
-            //allora c'è un cambio nelle direzioni possibili
             if (ghostCollisions.length > ghost.pastCollisions.length) {
                 ghost.pastCollisions = ghostCollisions;
             }
 
-            //se il numero di collisioni correnti non è uguale al numero di collisioni passate
-            //allora ci sono nuove direzioni possibili
             if (!(ghostCollisions.toString() == ghost.pastCollisions.toString())) {
                 if (ghost.speedX > 0)
                     ghost.pastCollisions.push("right");
@@ -684,25 +626,15 @@ $(document).ready(() => {
                 if (ghost.speedY > 0)
                     ghost.pastCollisions.push("down");
 
-                //un array con le possibili direzioni
-                const possiblePaths = [];
-
-                //trova la differenza tra le collisioni correnti e quelle passate
-                //e aggiungi le direzioni ottenute(possibili) all'array
-                for (let i = 0; i < ghost.pastCollisions.length; i++) {
-
-                    const collision = ghost.pastCollisions[i];
-
-                    if (!ghostCollisions.includes(collision)) {
-                        possiblePaths.push(collision);
+                const possiblePaths = ghost.pastCollisions.filter(
+                    collision => {
+                        return !ghostCollisions.includes(collision);
                     }
-                }
+                );
 
-                //prende una direzione a caso tra quelle possibili
+
                 const randomDirection = possiblePaths[Math.floor(Math.random() * possiblePaths.length)];
-
-                //basandosi sulla direzione scelta, cambia la velocità del fantasma
-                switch (randomDirection) {
+                switch(randomDirection) {
                     case "up":
                         ghost.speedX = 0;
                         ghost.speedY = -ghostSpeed;
@@ -721,107 +653,80 @@ $(document).ready(() => {
                         break;
                 }
 
-                //resetta le collisioni passate 
-                //per riniziare il processo
                 ghost.pastCollisions = [];
             }
-            if (enableDebug) {
-                console.log("Present:" + ghostCollisions)
-                console.log("Past:" + ghost.pastCollisions)
-                console.log("Possible:" + possiblePaths)
-            }
+            //console.log("Present:" + ghostCollisions)
+            //console.log("Past:" + ghost.pastCollisions)
+            //console.log("Possible:" + possiblePaths)
+            //console.log(1)
         });
     }
 
-    //La funzione che gestisce le collisioni tra pacman e i fantasmi
-    function ghostsPacmanCollision() {
-        //se c'è già stata una collisione non fa niente 
-        //per attivare codice sotto solo una volta
-        if (ghostPlayerCollision)
+    let ghostPlayerCollision = false;
+
+    function ghostsCollision(){
+        if(ghostPlayerCollision)
             return;
 
-        for (let i = 0; i < ghosts.length; i++) {
+        for(let i = 0; i < ghosts.length; i++){
             const ghost = ghosts[i];
-            //se un fantasma non è spaventato e collide con pacman
-            if (isCollidingCircle(ghost, pacman) && !ghost.isScared) {
-                //rinizia il gioco con una pause per input
+            if(isCollidingCircle(ghost, pacman) && !ghost.isScared){
                 startOnAction(false, "PRESS ANY BUTTON TO CONTINUE PLAYING");
-                //per segnalare che c'è già stata una collisione
                 ghostPlayerCollision = true;
                 break;
             }
-            //se un fantasma è spaventato e collide con pacman
-            if (isCollidingCircle(ghost, pacman) && ghost.isScared) {
-                //memorizza il colore del fantasma morto
+            if(isCollidingCircle(ghost, pacman) && ghost.isScared){
                 let deadGhostColor = ghost.color;
                 ghosts.splice(i, 1);
                 score += 100;
                 setTimeout(() => {
-                    //crea un nuovo fantasma tra 5 secondi con il colore del fantasma morto
-                    //se non ci sono 4 fantasmi già
-                    if (ghosts.length != 4)
+                    if(ghosts.length != 4)
                         createGhostsArrayColor(deadGhostColor);
                 }, 5000);
                 break;
             }
-        }
+        }     
     }
 
     //GAME
-    //La funzione che ferma il gioco e mostra un testo sullo schermo
-    //Dopo un input risetta il gioco chiamando la funzione resetGame()
-    //Il primo argomento controlla se è la prima volta che il gioco viene avviato
-    //Testo puo essere cambiato con il secondo argomento
-    function startOnAction(isOnPageLoad, textToDisplay) {
-        //ferma il gioco
-        cancelAnimationFrame(frameID);
+    function startOnAction(isOnPageLoad, textToDisplay){  
+        cancelAnimationFrame(frameID);//ferma il gioco
 
-        //se pacman ha perso tutte le vite
-        if (lives - 1 == 0) {
-            //animazione con i pacman
+        if(lives - 1 == 0){
+            //$("#livesText").addClass("last-lives");
+            //$("#livestext").removeClass("last-lives");
+
             animationPagePacman();
             return;
         }
 
-        //mostra il testo specificato negli argomenti
-        $(".text").text(textToDisplay);
+        $(".text").html(textToDisplay);
 
-        //aspetta un input
         $(document).one("keydown", () => {
-            $(".text").text("");
-            //riavvia il gioco
+            $(".text").html("");
             requestAnimationFrame(gameLoop);
-            //se non è la prima volta che il gioco viene avviato
-            if (!isOnPageLoad)
-                //risetta il gioco cambiando le vite
+            if(!isOnPageLoad)
                 resetGame(true);
-            if (lives == 1) {
-                //se è l'ultima vita aggiunge un'animazione al testo delle vite
-                $("#livesText").addClass("last-lives");
+            if(lives == 1){
+                $("#livesText").addClass("last-lives"); 
             }
             return;
         });
     }
 
-    //La funzione che risetta il gioco
-    //L'argomento specifica se le vite devono essere cambiate
-    function resetGame(changeLives) {
-        if (changeLives)
+    function resetGame(changeLives){
+        if(changeLives)
             lives--;
-        //se le vite non devono essere cambiate(=> il giocatore ha raccolto tutte le palline)
-        if (!changeLives) {
-            pellets = [];
-            createPelletsArray();
+        if(!changeLives){
+            createPelletsArray(); 
         }
-        //se il giocatore ha perso tutte le vite
-        if (lives == 0) {
+        if(lives == 0){
             lives = 3;
             score = 0;
             $("#score").text(score);
             pellets = [];
             createPelletsArray();
-            //rimuove l'animazione al testo delle vite
-            $("#livesText").removeClass("last-lives");
+            $("#livesText").removeClass("last-lives"); 
         }
         $("#lives").text(lives);
         pacman.x = pacmanStartPosition;
@@ -830,32 +735,30 @@ $(document).ready(() => {
         pacman.speedY = 0;
         ghosts = [];
         createGhostsArray();
-        //per resettare la collisione tra pacman e i fantasmi
         ghostPlayerCollision = false;
     }
 
-    //La funzione che gestisce l'animazione con i pacman
-    function animationPagePacman() {
-        $(".gameover").text("GAME OVER");
+    function animationPagePacman(){
+        $(".gameover").html("GAME OVER");
         audio5.play();
-        setTimeout(function () {
-            $(".pacman").animate({ "left": "+=150%" }, 3000);
-            $(".rettangolo").animate({ "width": "+=150%" }, 3000);
-
-            $(".pacmanD").animate({ "left": "-=150%" }, 3000);
-            $(".rettangoloD").animate({ "width": "+=150%" }, 3000);
+        setTimeout(function() {
+        $(".pacman").animate({"left": "+=150%"}, 3000);
+        $(".rettangolo").animate({"width": "+=150%"}, 3000);
+    
+        $(".pacmanD").animate({"left": "-=150%"}, 3000);
+        $(".rettangoloD").animate({"width": "+=150%"}, 3000);
 
         }, 2000);
 
-        setTimeout(function () {
-            $(".gameover").text("");
-            $(".rettangolo").animate({ "width": "-=150%" }, 2000);
+        setTimeout(function() {
+            $(".gameover").html("");
+            $(".rettangolo").animate({"width": "-=150%"}, 2000);
 
-            $(".rettangoloD").animate({ "width": "-=150%" }, 2000);
+            $(".rettangoloD").animate({"width": "-=150%"}, 2000);
 
         }, 5000);
 
-        setTimeout(function () {
+        setTimeout(function() {
             $(".pacman").css("left", "-=150%");
             $(".pacmanD").css("left", "+=150%");
             requestAnimationFrame(gameLoop);
@@ -864,58 +767,44 @@ $(document).ready(() => {
         }, 5500);
     }
 
-    //Animazione per il cambio di livello
-    function nextlevel() {
+
+    function nextlevel(){
         cancelAnimationFrame(frameID);//ferma il gioco
         $(".next-level").text("N");
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "E");
-        }, 400);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "X");
-        }, 800);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "T");
-        }, 1200);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + " ");
-        }, 1600);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "L");
-        }, 2000);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "E");
-        }, 2400);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "V");
-        }, 2800);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "E");
-        }, 3200);
-        setTimeout(function () {
-            $(".next-level").text($(".next-level").text() + "L");
-        }, 3600);
-        setTimeout(function () {
-            $(".next-level").text("");
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 400);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "X");
+            }, 800);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "T");
+            }, 1200);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + " ");
+            }, 1600);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "L");
+            }, 2000);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 2400);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "V");
+            }, 2800);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 3200);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "L");
+            }, 3600);
+        setTimeout(function() {
+            $(".next-level").html("");
             requestAnimationFrame(gameLoop);
             resetGame(false);
-        }, 4000);
+            }, 4000);   
     }
-
-    //La funzione che resetta max punteggio dopo un click(con confirm)
-    function resetHighScoreClick() {
-        $("#highScoreText").click(() => {
-            let confirmed = window.confirm("Are you sure you want to reset your high score?");
-            if (confirmed) {
-                localStorage.setItem("highScore", 0);
-                $("#highScore").text(localStorage.getItem("highScore"));
-                return;
-            }
-            return;
-        });
-    }
-
-    //Le funzioni che vengono chiamate una volta sola all'inizio del gioco
+    
     drawBorders();
     createPelletsArray();
     createBordersArray();
@@ -927,17 +816,14 @@ $(document).ready(() => {
     gameLoop();
     pacmanGetDirection();
     startOnAction(true, "PRESS ANY BUTTON TO BEGIN PLAYING");
-    resetHighScoreClick();
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop() {
-        //richiama la funzione gameLoop 60 volte al secondo
-        frameID = requestAnimationFrame(gameLoop); 
-        //pulisce il canvas ogni frame per aggiornarlo
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height); 
+        frameID = requestAnimationFrame(gameLoop);                  //richiama la funzione gameLoop 60 volte al secondo
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height); //pulisce il canvas ogni frame per evitare che pacman lasci una traccia
         pacmanSetSpeed();
         pelletsCollision();
-        ghostsPacmanCollision();
+        ghostsCollision();
         pacman.move();
         drawPellets();
         drawBorders();
