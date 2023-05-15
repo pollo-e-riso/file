@@ -1,14 +1,13 @@
 $(document).ready(() => {
-    //musica di sottofondo
-    var audio = document.getElementById("myAudio");
-    //musica mangio palline grosse
-    var audio2 = document.getElementById("myAudio2");
-    //metal piper
-    var audio3 = document.getElementById("myAudio3");
-    //musica waka waka
-    var audio4 = document.getElementById("myAudio4");
-    //musica pacman morto 3 volte
-    var audio5 = document.getElementById("myAudio5");
+    var audio2 = document.getElementById("myAudio2");//musica mangio palline grosse
+
+    var audio5 = document.getElementById("myAudio5");//musica pacman morto 3 volte
+
+    var audio6 = document.getElementById("myAudio6");//musica pacman palline piccole
+
+    var audio7 = document.getElementById("myAudio7");//musica pacman palline grandi
+
+    var audio8 = document.getElementById("myAudio8");//musica next level
 
     //Selezione del tag canvass
     const canvas = document.querySelector("canvas");
@@ -487,8 +486,12 @@ $(document).ready(() => {
                     nextlevel();
                 }
 
+                if(pellet.radius == pacmanRadius / 3.8) {
+                    audio6.play();
+                }
+
                 if(pellet.radius == pacmanRadius / 1.5) {
-                    audio2.play();
+                    audio7.play();
                     ghosts.forEach((ghost) => {
                         ghost.isScared = true;
                         ghostMovement();
@@ -676,6 +679,7 @@ $(document).ready(() => {
                 break;
             }
             if(isCollidingCircle(ghost, pacman) && ghost.isScared){
+                audio2.play();
                 let deadGhostColor = ghost.color;
                 ghosts.splice(i, 1);
                 score += 100;
@@ -771,38 +775,39 @@ $(document).ready(() => {
     function nextlevel(){
         cancelAnimationFrame(frameID);//ferma il gioco
         $(".next-level").text("N");
+        audio8.play();
         setTimeout(function() {
                 $(".next-level").text($(".next-level").text() + "E");
-            }, 400);
+            }, 600);
         setTimeout(function() {
                 $(".next-level").text($(".next-level").text() + "X");
-            }, 800);
-        setTimeout(function() {
-                $(".next-level").text($(".next-level").text() + "T");
             }, 1200);
         setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "T");
+            }, 1800);
+        setTimeout(function() {
                 $(".next-level").text($(".next-level").text() + " ");
-            }, 1600);
-        setTimeout(function() {
-                $(".next-level").text($(".next-level").text() + "L");
-            }, 2000);
-        setTimeout(function() {
-                $(".next-level").text($(".next-level").text() + "E");
             }, 2400);
         setTimeout(function() {
-                $(".next-level").text($(".next-level").text() + "V");
-            }, 2800);
+                $(".next-level").text($(".next-level").text() + "L");
+            }, 3000);
         setTimeout(function() {
                 $(".next-level").text($(".next-level").text() + "E");
-            }, 3200);
+            }, 3600);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "V");
+            }, 4200);
+        setTimeout(function() {
+                $(".next-level").text($(".next-level").text() + "E");
+            }, 4800);
         setTimeout(function() {
                 $(".next-level").text($(".next-level").text() + "L");
-            }, 3600);
+            }, 5400);
         setTimeout(function() {
             $(".next-level").html("");
             requestAnimationFrame(gameLoop);
             resetGame(false);
-            }, 4000);   
+            }, 6000);   
     }
     
     drawBorders();
