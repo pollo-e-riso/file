@@ -809,6 +809,15 @@ $(document).ready(() => {
             resetGame(false);
             }, 6000);   
     }
+
+    function resetHightScore(){
+        $("#highScoreText").click(()=>{
+            if(confirm("Are you sure you want to reset your high score?")){
+                localStorage.setItem("highScore", 0);
+                $("#highScore").text(0);
+            }
+        });
+    }
     
     drawBorders();
     createPelletsArray();
@@ -821,6 +830,7 @@ $(document).ready(() => {
     gameLoop();
     pacmanGetDirection();
     startOnAction(true, "PRESS ANY BUTTON TO BEGIN PLAYING");
+    resetHightScore();
 
     //La funzione che si ripete ogni frame e chiama le altre funzioni
     function gameLoop() {

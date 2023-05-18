@@ -67,6 +67,10 @@ canvas {
   font-family: cursive;
 }
 
+#highScoreText{
+  cursor: pointer;
+}
+
 .text{
   position: absolute;
   left: 50%;
