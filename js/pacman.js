@@ -30,7 +30,7 @@ $(document).ready(() => {
     const borderAmountVertical = 30;
 
     //La velocita' del pacman
-    const pacmanSpeed = 3;
+    const pacmanSpeed = 4;
 
     //La velocita' dei fantasmi
     const ghostSpeed = pacmanSpeed - 1;
